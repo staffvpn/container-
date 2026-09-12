@@ -102,7 +102,7 @@ function BooleanCheckbox({
 }) {
   return (
     <label className="flex items-center gap-2">
-      <input type="checkbox" checked={checked} onChange={onChange} />
+      <input type="checkbox" checked={checked} onChange={onChange} className="accent-[var(--color-accent)]" />
       {label}
     </label>
   );
