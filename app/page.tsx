@@ -4,6 +4,7 @@ import { SearchBar } from "@/components/search-bar";
 import { CategoryCard } from "@/components/category-card";
 import { SupplierCard } from "@/components/supplier-card";
 import { OfferTeaserCard } from "@/components/offer-teaser-card";
+import { BecomeSupplierForm } from "@/components/become-supplier-form";
 
 export default async function HomePage() {
   const [categories, popularSuppliers] = await Promise.all([
@@ -51,6 +52,16 @@ export default async function HomePage() {
               <OfferTeaserCard key={offer.id} offer={offer} supplierName={supplier?.name ?? ""} />
             );
           })}
+        </div>
+      </section>
+
+      <section className="flex flex-col items-center gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-8 text-center">
+        <h2 className="text-2xl font-semibold">Стать поставщиком</h2>
+        <p className="max-w-xl text-[var(--color-ink-soft)]">
+          Разместите компанию в Контейнере и получайте заявки от заведений HoReCa.
+        </p>
+        <div className="w-full max-w-xl text-left">
+          <BecomeSupplierForm />
         </div>
       </section>
     </main>
