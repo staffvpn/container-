@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { manrope } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Контейнер",
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ru">
-      <body>{children}</body>
+    <html lang="ru" className={manrope.variable}>
+      <body className="font-sans">{children}</body>
     </html>
   );
 }
