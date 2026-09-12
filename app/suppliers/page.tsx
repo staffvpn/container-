@@ -1,0 +1,71 @@
+import Link from "next/link";
+import { getSuppliers } from "@/lib/data/suppliers";
+import { SearchBar } from "@/components/search-bar";
+import { SupplierCard } from "@/components/supplier-card";
+import { FilterPanel } from "@/components/filter-panel";
+import { SortDropdown } from "@/components/sort-dropdown";
+import type { SupplierFilters } from "@/lib/data/types";
+
+type SearchParams = Record<string, string | string[] | undefined>;
+
+function readParam(searchParams: SearchParams, key: string): string | undefined {
+  const value = searchParams[key];
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function SuppliersPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const filters: SupplierFilters = {
+    city: readParam(params, "city"),
+    category: readParam(params, "category"),
+    delivery: readParam(params, "delivery") === "1",
+    pickup: readParam(params, "pickup") === "1",
+    confirmedOnly: readParam(params, "confirmed") === "1",
+    query: readParam(params, "q"),
+    sort: (readParam(params, "sort") as SupplierFilters["sort"]) ?? "recommended",
+  };
+
+  const suppliers = await getSuppliers(filters);
+
+  return (
+    <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10">
+      <SearchBar initialQuery={filters.query} />
+
+      <div className="flex flex-col gap-8 md:flex-row">
+        <aside className="w-full shrink-0 md:w-56">
+          <FilterPanel />
+        </aside>
+
+        <div className="flex flex-1 flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-[var(--color-ink-soft)]">Найдено: {suppliers.length}</p>
+            <SortDropdown />
+          </div>
+
+          {suppliers.length === 0 ? (
+            <div className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-8 text-center">
+              <p className="mb-2 font-medium">Ничего не найдено</p>
+              <p className="text-sm text-[var(--color-ink-soft)]">
+                Не нашли поставщика?{" "}
+                <Link href="/suppliers-portal" className="text-[var(--color-accent)]">
+                  Добавьте его
+                </Link>
+                .
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {suppliers.map((supplier) => (
+                <SupplierCard key={supplier.slug} supplier={supplier} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
