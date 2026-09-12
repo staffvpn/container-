@@ -16,6 +16,12 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
     .map((slug) => categories.find((c) => c.slug === slug)?.name)
     .filter(Boolean);
   const status = statusLabel[supplier.status];
+  const conditionParts = [
+    supplier.conditions.delivery && "Доставка",
+    supplier.conditions.pickup && "Самовывоз",
+    supplier.conditions.minOrder &&
+      `от ${supplier.conditions.minOrder.toLocaleString("ru-RU")} ₽`,
+  ].filter((part): part is string => Boolean(part));
 
   return (
     <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-line)] p-5">
@@ -28,6 +34,10 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
       </div>
 
       <p className="line-clamp-2 text-sm text-[var(--color-ink-soft)]">{supplier.shortDescription}</p>
+
+      {conditionParts.length > 0 && (
+        <p className="text-xs text-[var(--color-ink-soft)]">{conditionParts.join(" · ")}</p>
+      )}
 
       <div className="flex flex-wrap gap-2 text-xs text-[var(--color-ink-soft)]">
         {categoryNames.map((name) => (

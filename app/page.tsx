@@ -55,7 +55,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-8 text-center">
+      <section
+        id="become-supplier"
+        className="flex flex-col items-center gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-8 text-center"
+      >
         <h2 className="text-2xl font-semibold">Стать поставщиком</h2>
         <p className="max-w-xl text-[var(--color-ink-soft)]">
           Разместите компанию в Контейнере и получайте заявки от заведений HoReCa.

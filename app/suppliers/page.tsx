@@ -1,10 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getSuppliers } from "@/lib/data/suppliers";
 import { SearchBar } from "@/components/search-bar";
 import { SupplierCard } from "@/components/supplier-card";
 import { FilterPanel } from "@/components/filter-panel";
 import { SortDropdown } from "@/components/sort-dropdown";
 import type { SupplierFilters } from "@/lib/data/types";
+
+export const metadata: Metadata = {
+  title: "Поставщики — Контейнер",
+  description: "Найдите поставщика для кофейни, ресторана, бара или другого заведения HoReCa.",
+};
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -51,7 +57,7 @@ export default async function SuppliersPage({
               <p className="mb-2 font-medium">Ничего не найдено</p>
               <p className="text-sm text-[var(--color-ink-soft)]">
                 Не нашли поставщика?{" "}
-                <Link href="/suppliers-portal" className="text-[var(--color-accent)]">
+                <Link href="/#become-supplier" className="text-[var(--color-accent)]">
                   Добавьте его
                 </Link>
                 .

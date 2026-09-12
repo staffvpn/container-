@@ -24,4 +24,18 @@ describe("scoreSupplier", () => {
   it("returns 0 for an empty query", () => {
     expect(scoreSupplier(rosteryNord, "")).toBe(0);
   });
+
+  it("scores a Russian city display name the same as the city slug", () => {
+    const bySlug = scoreSupplier(rosteryNord, "moscow");
+    const byName = scoreSupplier(rosteryNord, "Москва");
+    expect(byName).toBeGreaterThan(0);
+    expect(byName).toBe(bySlug);
+  });
+
+  it("scores a Russian category display name the same as the category slug", () => {
+    const bySlug = scoreSupplier(rosteryNord, "coffee-tea");
+    const byName = scoreSupplier(rosteryNord, "Кофе и чай");
+    expect(byName).toBeGreaterThan(0);
+    expect(byName).toBe(bySlug);
+  });
 });

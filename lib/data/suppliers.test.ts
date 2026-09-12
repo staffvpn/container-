@@ -29,6 +29,20 @@ describe("getSuppliers", () => {
     expect(result).toEqual([]);
   });
 
+  it("returns the same suppliers for a Russian city name as for its slug", async () => {
+    const bySlug = await getSuppliers({ query: "moscow" });
+    const byName = await getSuppliers({ query: "Москва" });
+    expect(byName.length).toBeGreaterThan(0);
+    expect(byName.map((s) => s.slug).sort()).toEqual(bySlug.map((s) => s.slug).sort());
+  });
+
+  it("returns the same suppliers for a Russian category name as for its slug", async () => {
+    const bySlug = await getSuppliers({ query: "coffee-tea" });
+    const byName = await getSuppliers({ query: "Кофе и чай" });
+    expect(byName.length).toBeGreaterThan(0);
+    expect(byName.map((s) => s.slug).sort()).toEqual(bySlug.map((s) => s.slug).sort());
+  });
+
   it("sorts by rating when requested", async () => {
     const result = await getSuppliers({ sort: "rating" });
     for (let i = 1; i < result.length; i++) {

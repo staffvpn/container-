@@ -1,8 +1,9 @@
 import { suppliers as allSuppliers } from "./fixtures/suppliers";
 import { categories as allCategories } from "./fixtures/categories";
 import { cities as allCities } from "./fixtures/cities";
+import { offers as allOffers } from "./fixtures/offers";
 import { scoreSupplier } from "./scoring";
-import type { Supplier, Category, SupplierFilters, SearchResult } from "./types";
+import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult } from "./types";
 
 export async function getSuppliers(filters: SupplierFilters = {}): Promise<Supplier[]> {
   let result = allSuppliers.slice();
@@ -54,6 +55,17 @@ export async function getSupplierBySlug(slug: string): Promise<Supplier | null> 
 
 export async function getCategories(): Promise<Category[]> {
   return allCategories.slice();
+}
+
+export async function getCities(): Promise<City[]> {
+  return allCities.slice();
+}
+
+export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
+  if (supplierSlug) {
+    return allOffers.filter((o) => o.supplierSlug === supplierSlug);
+  }
+  return allOffers.slice();
 }
 
 export async function searchSuppliers(query: string): Promise<SearchResult> {

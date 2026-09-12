@@ -77,7 +77,12 @@ lib/data/
 
 Every exported function is `async` and returns the same shape a Supabase
 query will return later. Fixture data lives under `fixtures/`; the functions
-in `suppliers.ts` are the only files sub-project 1 needs to rewrite.
+in `suppliers.ts` are the primary files sub-project 1 needs to rewrite.
+`components/filter-panel.tsx` and `components/become-supplier-form.tsx` also
+read the `cities`/`categories` fixtures directly (for their city/category
+pickers), and, being client components, will need restructuring — receiving
+this data as props from a server parent — rather than a drop-in swap when
+the real backend lands.
 
 `Supplier` fields mirror brief sections 10–19: name, slug, logoUrl, city,
 categories[], shortDescription, rating, reviewCount, status
@@ -161,3 +166,8 @@ when `?q=` is present, combined with active filter state.
 - Личный кабинет поставщика — sub-project 3.
 - Admin panel — sub-project 4.
 - Real brand fonts — swap into `lib/fonts.ts` when received.
+- `components/filter-panel.tsx` and `components/become-supplier-form.tsx`
+  read the `cities`/`categories` fixtures directly instead of going through
+  `lib/data/suppliers.ts`; as client components they'll need to be
+  restructured to receive this data as props from a server parent when the
+  real backend lands, rather than a drop-in function swap.

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getSupplierBySlug } from "@/lib/data/suppliers";
 import { offers } from "@/lib/data/fixtures/offers";
 import { cities } from "@/lib/data/fixtures/cities";
@@ -11,6 +12,22 @@ const statusLabel: Record<string, string | null> = {
   confirmed: "Профиль подтвержден",
   verified: "Проверен Контейнером",
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const supplier = await getSupplierBySlug(slug);
+  if (!supplier) {
+    return { title: "Поставщик не найден — Контейнер" };
+  }
+  return {
+    title: `${supplier.name} — Контейнер`,
+    description: supplier.shortDescription,
+  };
+}
 
 export default async function SupplierPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
