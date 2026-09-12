@@ -27,7 +27,7 @@ export default async function HomePage() {
 
       <section className="flex flex-col gap-6">
         <h2 className="text-2xl font-semibold">Категории</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {categories.map((category) => (
             <CategoryCard key={category.slug} category={category} />
           ))}

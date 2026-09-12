@@ -41,7 +41,7 @@ export default async function SuppliersPage({
         </aside>
 
         <div className="flex flex-1 flex-col gap-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-sm text-[var(--color-ink-soft)]">Найдено: {suppliers.length}</p>
             <SortDropdown />
           </div>
