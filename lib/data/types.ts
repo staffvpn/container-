@@ -53,3 +53,19 @@ export interface Offer {
   category?: string;
   expiresAt?: string;
 }
+
+export interface SupplierFilters {
+  city?: string;
+  category?: string;
+  delivery?: boolean;
+  pickup?: boolean;
+  confirmedOnly?: boolean;
+  query?: string;
+  sort?: "recommended" | "rating" | "new" | "updated";
+}
+
+export interface SearchResult {
+  companies: Supplier[];
+  categories: Category[];
+  cities: City[];
+}
