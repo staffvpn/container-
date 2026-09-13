@@ -13,61 +13,56 @@ export default async function HomePage() {
     getSuppliers({ sort: "rating" }),
   ]);
   const topSuppliers = popularSuppliers.slice(0, 6);
-  const stats = [
-    { value: popularSuppliers.length, label: "поставщиков", highlight: false },
-    { value: cities.length, label: "городов", highlight: true },
-    { value: categories.length, label: "категорий", highlight: false },
-  ];
 
   return (
     <main className="flex flex-col">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-24 px-6 py-12 md:px-12 md:py-16 lg:px-20">
-        <section className="flex flex-col gap-6">
-          <div className="relative overflow-visible rounded-[40px] bg-[var(--color-panel)] px-8 py-14 md:px-16 md:py-24">
-            <div className="flex w-full flex-col items-start gap-8 md:w-[58%]">
-              <h1 className="text-5xl font-semibold uppercase leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
-                Найдите
-                <br />
-                <span className="text-[var(--color-ink-soft)]">поставщика</span> для
-                <br />
-                своего бизнеса
-              </h1>
-              <p className="max-w-md text-lg text-[var(--color-ink-soft)]">
-                Поставщики для кофеен, ресторанов, баров и других заведений HoReCa — в одном месте.
-              </p>
-              <SearchBar />
-            </div>
-
-            <div className="mt-14 flex aspect-[16/9] w-full items-center justify-center rounded-[28px] bg-[var(--color-surface)]/60 text-sm text-[var(--color-ink-soft)] md:absolute md:right-14 md:top-1/2 md:mt-0 md:w-[44%] md:-translate-y-1/2 lg:w-[40%]">
-              Фото заведения / поставщика
-            </div>
+      <section className="relative w-full overflow-visible bg-[var(--color-panel)] px-6 py-14 md:px-16 md:py-24">
+        <div className="relative mx-auto max-w-[1800px]">
+          <div className="flex w-full flex-col items-start gap-8 md:w-[58%]">
+            <h1 className="text-5xl font-semibold uppercase leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
+              Найдите
+              <br />
+              <span className="text-[var(--color-ink-soft)]">поставщика</span> для
+              <br />
+              своего бизнеса
+            </h1>
+            <p className="max-w-md text-lg text-[var(--color-ink-soft)]">
+              Поставщики для кофеен, ресторанов, баров и других заведений HoReCa — в одном месте.
+            </p>
+            <SearchBar />
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 px-2">
-            <div className="flex items-center gap-3 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] py-2 pl-2 pr-4">
-              <div className="flex -space-x-2">
-                {["#2C3E67", "#2F5D50", "#7A5C3E"].map((color) => (
-                  <span
-                    key={color}
-                    className="h-8 w-8 rounded-full border-2 border-[var(--color-surface)]"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-              <span className="text-sm font-medium">★ 4.9 · {popularSuppliers.length}+ поставщиков</span>
-            </div>
+          <div className="mt-14 flex aspect-[4/3] w-full items-center justify-center rounded-[28px] bg-[var(--color-surface)]/60 text-sm text-[var(--color-ink-soft)] md:absolute md:right-0 md:top-1/2 md:mt-0 md:w-[50%] md:-translate-y-1/2 lg:w-[48%]">
+            Фото заведения / поставщика
+          </div>
+        </div>
+      </section>
 
-            <div className="flex gap-3">
-              <div className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-5 py-2.5 text-sm">
-                <span className="font-semibold">{categories.length}+</span>{" "}
-                <span className="text-[var(--color-ink-soft)]">категорий</span>
-              </div>
-              <div className="rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm text-[var(--color-ink)]">
-                <span className="font-semibold">{cities.length}+</span> городов
-              </div>
+      <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-24 px-6 py-12 md:px-12 md:py-16 lg:px-20">
+        <div className="flex flex-wrap items-center justify-between gap-4 px-2">
+          <div className="flex items-center gap-3 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] py-2 pl-2 pr-4">
+            <div className="flex -space-x-2">
+              {["#2C3E67", "#2F5D50", "#7A5C3E"].map((color) => (
+                <span
+                  key={color}
+                  className="h-8 w-8 rounded-full border-2 border-[var(--color-surface)]"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
+            <span className="text-sm font-medium">★ 4.9 · {popularSuppliers.length}+ поставщиков</span>
+          </div>
+
+          <div className="flex gap-3">
+            <div className="rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-5 py-2.5 text-sm">
+              <span className="font-semibold">{categories.length}+</span>{" "}
+              <span className="text-[var(--color-ink-soft)]">категорий</span>
+            </div>
+            <div className="rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm text-[var(--color-ink)]">
+              <span className="font-semibold">{cities.length}+</span> городов
             </div>
           </div>
-        </section>
+        </div>
 
         <section className="flex flex-col items-center gap-6 text-center">
           <span className="rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
@@ -82,28 +77,7 @@ export default async function HomePage() {
         </section>
       </div>
 
-      <section className="bg-[var(--color-ink)] px-6 py-20 md:py-24">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-10 text-center">
-          <h2 className="text-3xl font-semibold text-white md:text-4xl">Контейнер в цифрах</h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className={`flex min-w-[200px] flex-col gap-1 rounded-[var(--radius-md)] px-10 py-8 ${
-                  stat.highlight ? "bg-[var(--color-accent)] text-[var(--color-ink)]" : "bg-white/10 text-white"
-                }`}
-              >
-                <span className="text-5xl font-semibold tracking-tight">{stat.value}</span>
-                <span className={`text-sm ${stat.highlight ? "text-[var(--color-ink)]/70" : "text-white/60"}`}>
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-20 px-6 py-20 md:px-12 md:py-24 lg:px-20">
+      <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-20 px-6 py-20 md:px-12 md:py-24 lg:px-20">
         <section className="flex flex-col gap-6">
           <h2 className="text-3xl font-semibold md:text-4xl">Популярные поставщики</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
