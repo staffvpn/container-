@@ -26,8 +26,6 @@ export default async function HomePage() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-white/10 to-transparent" />
-
         <div className="relative z-10 mx-auto w-full max-w-[1800px]">
           <div className="flex w-full max-w-xl flex-col items-start gap-8 rounded-[32px] bg-[var(--color-surface)]/90 p-8 backdrop-blur md:p-10">
             <h1 className="text-5xl font-semibold uppercase leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-6xl lg:text-7xl">
