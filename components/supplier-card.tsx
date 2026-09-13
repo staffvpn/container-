@@ -24,7 +24,7 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
   ].filter((part): part is string => Boolean(part));
 
   return (
-    <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-line)] p-5">
+    <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-line)] p-6">
       <div className="flex items-start gap-3">
         <SupplierLogo name={supplier.name} />
         <div className="min-w-0">
@@ -41,7 +41,7 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
 
       <div className="flex flex-wrap gap-2 text-xs text-[var(--color-ink-soft)]">
         {categoryNames.map((name) => (
-          <span key={name} className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-2 py-1">
+          <span key={name} className="rounded-full border border-[var(--color-line)] px-3 py-1">
             {name}
           </span>
         ))}
@@ -55,7 +55,7 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
         </div>
         <Link
           href={`/supplier/${supplier.slug}`}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-3 py-1.5 text-sm"
+          className="rounded-full border border-[var(--color-line)] px-4 py-1.5 text-sm hover:border-[var(--color-ink)]"
         >
           Открыть
         </Link>

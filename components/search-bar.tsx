@@ -62,7 +62,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
 
   return (
     <div ref={rootRef} className="relative w-full max-w-2xl">
-      <div className="flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3">
+      <div className="flex items-center gap-2 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] py-2 pl-6 pr-2">
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -73,9 +73,13 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
         />
         <button
           onClick={() => submit(value)}
-          className="rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-4 py-2 text-sm text-white"
+          aria-label="Найти"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-white"
         >
-          Найти
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.7" />
+            <path d="M16 16L13 13" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          </svg>
         </button>
       </div>
 

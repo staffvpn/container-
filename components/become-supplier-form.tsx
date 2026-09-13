@@ -58,14 +58,14 @@ export function BecomeSupplierForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-6 text-center">
+      <div className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-8 text-center">
         <p className="font-medium">Заявка отправлена. После проверки профиль будет опубликован.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--color-line)] p-6">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--color-line)] p-8">
       <TextField label="Название компании *" value={form.companyName} onChange={(v) => update("companyName", v)} />
       <TextField label="Имя контактного лица *" value={form.contactName} onChange={(v) => update("contactName", v)} />
       <TextField label="Телефон *" value={form.phone} onChange={(v) => update("phone", v)} />
@@ -106,8 +106,10 @@ export function BecomeSupplierForm() {
                       : [...form.categorySlugs, category.slug],
                   )
                 }
-                className={`rounded-[var(--radius-sm)] border px-3 py-1.5 text-sm ${
-                  active ? "border-[var(--color-ink)]" : "border-[var(--color-line)]"
+                className={`rounded-full border px-4 py-1.5 text-sm ${
+                  active
+                    ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
+                    : "border-[var(--color-line)]"
                 }`}
               >
                 {category.name}
@@ -125,7 +127,7 @@ export function BecomeSupplierForm() {
 
       <button
         type="submit"
-        className="mt-2 rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-4 py-2 text-sm text-white"
+        className="mt-2 self-start rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90"
       >
         Отправить заявку
       </button>

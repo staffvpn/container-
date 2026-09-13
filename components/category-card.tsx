@@ -5,7 +5,7 @@ export function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
       href={`/suppliers?category=${category.slug}`}
-      className="rounded-[var(--radius-md)] border border-[var(--color-line)] px-4 py-6 text-center text-sm font-medium hover:border-[var(--color-ink)]"
+      className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm font-medium hover:border-[var(--color-ink)] hover:bg-[var(--color-surface)]"
     >
       {category.name}
     </Link>

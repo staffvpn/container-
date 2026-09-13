@@ -22,7 +22,7 @@ export function ShareButton({ title, url }: { title: string; url: string }) {
   return (
     <button
       onClick={handleShare}
-      className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-3 py-1.5 text-sm"
+      className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
     >
       {copied ? "Ссылка скопирована" : "Поделиться"}
     </button>

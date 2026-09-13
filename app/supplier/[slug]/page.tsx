@@ -60,7 +60,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           {supplier.contacts.website && (
             <a
               href={`/api/redirect?to=${encodeURIComponent(supplier.contacts.website)}&supplier=${supplier.slug}`}
-              className="rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-4 py-2 text-sm text-white"
+              className="rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
             >
               Перейти на сайт
             </a>
@@ -68,7 +68,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           {supplier.contacts.phone && (
             <a
               href={`tel:${supplier.contacts.phone}`}
-              className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-4 py-2 text-sm"
+              className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
             >
               Позвонить
             </a>
@@ -76,7 +76,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           {supplier.contacts.telegram && (
             <a
               href={supplier.contacts.telegram}
-              className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-4 py-2 text-sm"
+              className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
             >
               Telegram
             </a>
@@ -92,7 +92,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
             <a
               key={category.slug}
               href={`/suppliers?category=${category.slug}`}
-              className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-3 py-1.5 text-sm"
+              className="rounded-full border border-[var(--color-line)] px-4 py-1.5 text-sm hover:border-[var(--color-ink)]"
             >
               {category.name}
             </a>
