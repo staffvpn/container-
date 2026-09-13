@@ -6,7 +6,7 @@
   --color-ink: #252525;
   --color-accent: #3c673a;
   --color-paper: #f7efed;
-  --color-surface: #feefe3;
+  --color-surface: #e6e6e6;
 
   --color-ink-soft: color-mix(in srgb, var(--color-ink) 58%, var(--color-paper) 42%);
   --color-line: color-mix(in srgb, var(--color-ink) 12%, var(--color-paper) 88%);
