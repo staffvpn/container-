@@ -8,6 +8,7 @@ import { CategoryCard } from "@/components/category-card";
 import { SupplierCard } from "@/components/supplier-card";
 import { OfferTeaserCard } from "@/components/offer-teaser-card";
 import { BecomeSupplierSection } from "@/components/become-supplier-section";
+import { WhyGryadkaSection } from "@/components/why-gryadka-section";
 import { ArrowIconButton } from "@/components/arrow-icon-button";
 
 const segments = [
@@ -31,13 +32,6 @@ const segments = [
     category: "packaging",
     tags: ["Упаковка", "Логистика", "Посуда"],
   },
-];
-
-const painPoints = [
-  "Поставщики разбросаны по десяткам сайтов и чатов",
-  "Сложно сравнить условия, доставку и минимальный заказ",
-  "Непонятно, кому из поставщиков можно доверять",
-  "Поиск нового поставщика занимает недели",
 ];
 
 export default async function HomePage() {
@@ -91,7 +85,7 @@ export default async function HomePage() {
         <section className="flex flex-col gap-10 md:flex-row md:items-start">
           <div className="flex max-w-xs shrink-0 flex-col gap-4">
             <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
-              Для кого Грядка
+              Для кого
             </span>
             <h2 className="text-3xl font-semibold leading-tight">
               Для любого заведения HoReCa
@@ -141,48 +135,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr]">
-          <div className="flex flex-col gap-6">
-            <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
-              Почему Грядка
-            </span>
-            <h2 className="text-3xl font-semibold leading-tight md:text-4xl">
-              Не искать поставщика по десяти сайтам
-            </h2>
-            <div className="flex flex-col gap-3">
-              {painPoints.map((point, i) => (
-                <div
-                  key={point}
-                  className="flex items-center gap-4 rounded-[20px] bg-[var(--color-panel)] px-5 py-4"
-                >
-                  <span className="text-2xl font-semibold text-[var(--color-ink-soft)]/40">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-medium">{point}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="relative flex aspect-[4/3] items-end rounded-[28px] bg-[var(--color-panel)] p-6 md:aspect-auto md:min-h-[420px]">
-              <h3 className="max-w-sm text-2xl font-semibold leading-snug">
-                Найдите подходящего поставщика за несколько минут
-              </h3>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="max-w-sm text-sm text-[var(--color-ink-soft)]">
-                Все условия, категории и контакты — в одном месте, без звонков в десять компаний.
-              </p>
-              <Link
-                href="/suppliers"
-                className="shrink-0 rounded-full bg-[var(--color-ink)] px-6 py-3 text-sm font-medium text-white hover:opacity-90"
-              >
-                Смотреть поставщиков
-              </Link>
-            </div>
-          </div>
-        </section>
+        <WhyGryadkaSection />
 
         <section className="flex flex-col gap-6">
           <span className="mx-auto w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
@@ -211,6 +164,27 @@ export default async function HomePage() {
                 <OfferTeaserCard key={offer.id} offer={offer} supplierName={supplier?.name ?? ""} />
               );
             })}
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <div className="flex aspect-[21/9] w-full items-center justify-center rounded-[32px] bg-[var(--color-ink)] text-sm uppercase tracking-widest text-white/40">
+            Фото
+          </div>
+          <div className="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
+            <h2 className="text-3xl font-semibold">Наш Telegram-канал</h2>
+            <p className="text-[var(--color-ink-soft)]">
+              Новости поставщиков, новые предложения и обновления Грядки — в нашем
+              Telegram-канале.
+            </p>
+            <a
+              href="https://t.me/gryadka"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-[var(--color-ink)] px-6 py-3 text-sm font-medium text-white hover:opacity-90"
+            >
+              Перейти в канал
+            </a>
           </div>
         </section>
 
