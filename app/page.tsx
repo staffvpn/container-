@@ -69,7 +69,7 @@ export default async function HomePage() {
         </section>
 
         <section className="grid grid-cols-1 gap-4 md:grid-cols-[0.8fr_1.2fr]">
-          <div className="relative h-[440px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+          <div className="relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-farm.png"
               alt=""
@@ -85,7 +85,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative h-[440px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+          <div className="relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-farm.png"
               alt=""
