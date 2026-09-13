@@ -38,7 +38,7 @@ export default async function SuppliersPage({
   const suppliers = await getSuppliers(filters);
 
   return (
-    <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10">
+    <main className="mx-auto flex max-w-[1440px] flex-col gap-8 px-6 py-10 md:px-12 lg:px-20">
       <SearchBar initialQuery={filters.query} />
 
       <div className="flex flex-col gap-8 md:flex-row">
