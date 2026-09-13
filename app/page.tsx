@@ -43,43 +43,67 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col">
-      <section className="relative flex min-h-[640px] w-full items-end bg-[var(--color-panel)] px-6 pb-16 md:min-h-[80dvh] md:px-16 md:pb-20">
-        <Image
-          src="/images/hero-farm.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-
-        <div className="relative z-10 mx-auto w-full max-w-[1800px]">
-          <div className="flex max-w-2xl flex-col items-start gap-6">
-            <h1 className="text-6xl font-semibold uppercase leading-[0.95] tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.35)] md:text-7xl lg:text-8xl">
-              Найдите
-              <br />
-              поставщика
-            </h1>
-            <p className="max-w-md text-lg text-white/90 [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
-              Поставщики для кофеен, ресторанов, баров и других заведений HoReCa — в одном месте.
-            </p>
-            <SearchBar />
-          </div>
-        </div>
-
-        <Link
-          href="/suppliers"
-          className="absolute bottom-6 right-6 z-10 hidden items-center gap-4 rounded-[24px] bg-[var(--color-surface)] p-5 md:flex"
-        >
-          <div>
-            <p className="text-3xl font-semibold tracking-tight">{popularSuppliers.length}+</p>
-            <p className="text-sm text-[var(--color-ink-soft)]">поставщиков уже в Грядке</p>
-          </div>
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-ink)] text-white">
+      <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-10 px-6 pb-24 pt-16 md:px-12 lg:px-20">
+        <section className="flex flex-col items-center gap-6 text-center">
+          <Link
+            href="/suppliers"
+            className="flex items-center gap-2 rounded-full bg-[var(--color-accent-soft)] px-4 py-2 text-xs font-medium uppercase tracking-wide text-[var(--color-accent)]"
+          >
+            Платформа для HoReCa
             <ArrowIconButton />
-          </span>
-        </Link>
-      </section>
+          </Link>
+
+          <h1 className="max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+            Найдите поставщика для своего бизнеса
+          </h1>
+
+          <div className="flex w-full max-w-xl flex-col items-center gap-3">
+            <SearchBar />
+            <Link
+              href="/#become-supplier"
+              className="text-sm font-medium text-[var(--color-ink-soft)] underline decoration-[var(--color-accent)] decoration-2 underline-offset-4"
+            >
+              Стать поставщиком
+            </Link>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-[0.8fr_1.2fr]">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+            <Image
+              src="/images/hero-farm.png"
+              alt=""
+              fill
+              priority
+              sizes="(min-width: 768px) 35vw, 100vw"
+              className="object-cover"
+              style={{ objectPosition: "20% 50%" }}
+            />
+            <div className="absolute bottom-4 left-4 rounded-[20px] bg-[var(--color-surface)] px-5 py-4">
+              <p className="text-2xl font-semibold tracking-tight">{popularSuppliers.length}+</p>
+              <p className="text-sm text-[var(--color-ink-soft)]">поставщиков в Грядке</p>
+            </div>
+          </div>
+
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] bg-[var(--color-panel)] md:aspect-auto">
+            <Image
+              src="/images/hero-farm.png"
+              alt=""
+              fill
+              priority
+              sizes="(min-width: 768px) 55vw, 100vw"
+              className="object-cover"
+              style={{ objectPosition: "70% 40%" }}
+            />
+            <p className="absolute left-6 top-6 max-w-xs text-sm text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.4)]">
+              Поставщики для кофеен, ресторанов, баров и других заведений HoReCa.
+            </p>
+            <div className="absolute bottom-4 right-4 rounded-[20px] bg-[var(--color-ink)] px-5 py-4 text-white">
+              <p className="text-sm font-medium">★ 4.9 средний рейтинг</p>
+            </div>
+          </div>
+        </section>
+      </div>
 
       <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-24 px-6 py-20 md:px-12 md:py-24 lg:px-20">
         <section className="flex flex-col gap-10 md:flex-row md:items-start">
