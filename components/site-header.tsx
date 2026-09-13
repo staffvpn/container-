@@ -19,7 +19,7 @@ export function SiteHeader() {
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
       <Link href="/" className="flex items-center gap-2">
-        <Image src="/images/logo.png" alt="" width={32} height={32} className="h-8 w-8" />
+        <Image src="/images/logo2.png" alt="" width={32} height={32} className="h-8 w-8" />
         <span
           className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-3xl tracking-tight`}
         >
