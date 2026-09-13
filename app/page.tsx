@@ -16,10 +16,12 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col">
-      <section className="relative w-full overflow-visible bg-[var(--color-panel)] px-6 py-14 md:px-16 md:py-24">
-        <div className="relative mx-auto max-w-[1800px]">
-          <div className="flex w-full flex-col items-start gap-8 md:w-[58%]">
-            <h1 className="text-5xl font-semibold uppercase leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
+      <section className="relative flex min-h-[560px] w-full items-center overflow-hidden bg-[var(--color-panel)] px-6 py-14 text-sm text-[var(--color-ink-soft)] md:min-h-[680px] md:px-16">
+        {/* Full-bleed photo goes here (replaces this placeholder fill) */}
+
+        <div className="relative z-10 mx-auto w-full max-w-[1800px]">
+          <div className="flex w-full max-w-xl flex-col items-start gap-8 rounded-[32px] bg-[var(--color-surface)]/90 p-8 backdrop-blur md:p-10">
+            <h1 className="text-5xl font-semibold uppercase leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-6xl lg:text-7xl">
               Найдите
               <br />
               <span className="text-[var(--color-ink-soft)]">поставщика</span> для
@@ -30,10 +32,6 @@ export default async function HomePage() {
               Поставщики для кофеен, ресторанов, баров и других заведений HoReCa — в одном месте.
             </p>
             <SearchBar />
-          </div>
-
-          <div className="mt-14 flex aspect-[4/3] w-full items-center justify-center rounded-[28px] bg-[var(--color-surface)]/60 text-sm text-[var(--color-ink-soft)] md:absolute md:right-0 md:top-1/2 md:mt-0 md:w-[50%] md:-translate-y-1/2 lg:w-[48%]">
-            Фото заведения / поставщика
           </div>
         </div>
       </section>
