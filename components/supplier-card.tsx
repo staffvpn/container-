@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SupplierLogo } from "./supplier-logo";
+import { ArrowIconButton } from "./arrow-icon-button";
 import type { Supplier } from "@/lib/data/types";
 import { cities } from "@/lib/data/fixtures/cities";
 import { categories } from "@/lib/data/fixtures/categories";
@@ -60,9 +61,7 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
         aria-label={`Открыть профиль ${supplier.name}`}
         className="absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-ink)] hover:opacity-90"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <ArrowIconButton />
       </Link>
     </div>
   );
