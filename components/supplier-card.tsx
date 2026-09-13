@@ -6,8 +6,8 @@ import { categories } from "@/lib/data/fixtures/categories";
 
 const statusLabel: Record<Supplier["status"], string | null> = {
   unverified: null,
-  confirmed: "Профиль подтвержден",
-  verified: "Проверен Контейнером",
+  confirmed: "Подтверждён",
+  verified: "Проверен",
 };
 
 export function SupplierCard({ supplier }: { supplier: Supplier }) {
@@ -24,47 +24,45 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
   ].filter((part): part is string => Boolean(part));
 
   return (
-    <div className="flex flex-col gap-4 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-3">
-      <div className="relative flex aspect-[4/3] items-center justify-center rounded-[calc(var(--radius-md)-8px)] bg-[var(--color-panel)]">
+    <div className="relative flex flex-col gap-6 rounded-[var(--radius-md)] bg-[var(--color-panel)] p-5 pb-6">
+      <div className="relative flex aspect-square items-center justify-center">
         <SupplierLogo name={supplier.name} size="lg" />
+
         {categoryNames.length > 0 && (
-          <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
+          <div className="absolute bottom-0 left-0 flex flex-col items-start gap-1.5">
             {categoryNames.slice(0, 2).map((name) => (
               <span
                 key={name}
-                className="rounded-full bg-[var(--color-surface)] px-2.5 py-1 text-xs font-medium"
+                className="rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs font-medium"
               >
                 {name}
               </span>
             ))}
           </div>
         )}
-        {status && (
-          <span className="absolute right-3 top-3 rounded-full bg-[var(--color-accent)] px-2.5 py-1 text-xs font-medium text-[var(--color-ink)]">
-            {status === "Проверен Контейнером" ? "Проверен" : "Подтверждён"}
-          </span>
-        )}
       </div>
 
-      <div className="flex flex-col gap-1 px-2">
-        <div className="flex items-start justify-between gap-2">
+      <div className="flex items-end justify-between gap-2">
+        <div className="min-w-0">
           <h3 className="truncate font-semibold">{supplier.name}</h3>
-          <span className="shrink-0 text-sm">★ {supplier.rating.toFixed(1)}</span>
+          <p className="text-sm text-[var(--color-ink-soft)]">
+            {cityName} · ★ {supplier.rating.toFixed(1)}
+            {status && ` · ${status}`}
+          </p>
+          {conditionParts.length > 0 && (
+            <p className="text-sm text-[var(--color-ink-soft)]">{conditionParts.join(" · ")}</p>
+          )}
         </div>
-        <p className="text-sm text-[var(--color-ink-soft)]">
-          {cityName}
-          <span className="text-[var(--color-ink-soft)]"> · {supplier.reviewCount} отзывов</span>
-        </p>
-        {conditionParts.length > 0 && (
-          <p className="text-sm text-[var(--color-ink-soft)]">{conditionParts.join(" · ")}</p>
-        )}
       </div>
 
       <Link
         href={`/supplier/${supplier.slug}`}
-        className="rounded-full bg-[var(--color-ink)] px-2 py-3 text-center text-sm font-medium text-white hover:opacity-90"
+        aria-label={`Открыть профиль ${supplier.name}`}
+        className="absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-ink)] hover:opacity-90"
       >
-        Открыть
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </Link>
     </div>
   );

@@ -37,12 +37,24 @@ export function SiteHeader() {
         })}
       </nav>
 
-      <Link
-        href="/profile"
-        className="rounded-full bg-[var(--color-ink)] px-5 py-2.5 text-sm text-white hover:opacity-90"
-      >
-        Профиль
-      </Link>
+      <div className="flex items-center gap-3">
+        <Link
+          href="/suppliers"
+          aria-label="Поиск"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] hover:border-[var(--color-ink)]"
+        >
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.6" />
+            <path d="M16 16L13 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        </Link>
+        <Link
+          href="/profile"
+          className="rounded-full bg-[var(--color-ink)] px-5 py-2.5 text-sm text-white hover:opacity-90"
+        >
+          Профиль
+        </Link>
+      </div>
     </header>
   );
 }
