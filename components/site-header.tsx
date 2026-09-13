@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { cheri } from "@/lib/fonts";
 
 const navItems = [
   { href: "/", label: "Главная" },
@@ -16,7 +17,10 @@ export function SiteHeader() {
 
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
-      <Link href="/" className="text-lg font-semibold tracking-tight">
+      <Link
+        href="/"
+        className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-3xl tracking-tight`}
+      >
         Грядка
       </Link>
 
