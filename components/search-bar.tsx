@@ -61,7 +61,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
     results.companies.length > 0 || results.categories.length > 0 || results.cities.length > 0;
 
   return (
-    <div ref={rootRef} className="relative w-full max-w-2xl">
+    <div ref={rootRef} className="relative w-full">
       <div className="flex items-center gap-2 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] py-2 pl-6 pr-2">
         <input
           value={value}
