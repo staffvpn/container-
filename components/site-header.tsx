@@ -27,14 +27,14 @@ export function SiteHeader() {
         </span>
       </Link>
 
-      <nav className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1 text-sm text-[var(--color-ink-soft)]">
+      <nav className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1.5 text-base text-[var(--color-ink-soft)]">
         {navItems.map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-4 py-2 transition-colors ${
+              className={`rounded-full px-5 py-3 transition-colors ${
                 active ? "bg-[var(--color-accent)] text-[var(--color-ink)]" : "hover:text-[var(--color-ink)]"
               }`}
             >
