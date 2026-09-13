@@ -21,7 +21,7 @@ export function SiteHeader() {
       <Link href="/" className="flex items-center gap-2">
         <Image src="/images/logo2.png" alt="" width={32} height={32} className="h-8 w-8" />
         <span
-          className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-3xl tracking-tight`}
+          className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-[34px] leading-none tracking-tight`}
         >
           Грядка
         </span>
