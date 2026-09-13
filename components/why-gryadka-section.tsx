@@ -65,11 +65,11 @@ export function WhyGryadkaSection() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="flex aspect-[4/3] items-center justify-center rounded-[28px] bg-[var(--color-panel)] text-sm text-[var(--color-ink-soft)] md:aspect-auto md:min-h-[420px]">
-          Фото
+        <div className="relative flex aspect-[4/3] items-end overflow-hidden rounded-[28px] bg-[var(--color-panel)] md:aspect-auto md:min-h-[420px]">
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 to-transparent" />
+          <p className="relative max-w-md p-6 text-white md:p-8">{current.detail}</p>
         </div>
-        <div className="flex items-start justify-between gap-4">
-          <p className="max-w-sm text-[var(--color-ink-soft)]">{current.detail}</p>
+        <div className="flex justify-end">
           <Link
             href="/suppliers"
             className="shrink-0 rounded-full bg-[var(--color-ink)] px-6 py-3 text-sm font-medium text-white hover:opacity-90"

@@ -167,13 +167,11 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="flex flex-col gap-6">
-          <div className="flex aspect-[21/9] w-full items-center justify-center rounded-[32px] bg-[var(--color-ink)] text-sm uppercase tracking-widest text-white/40">
-            Фото
-          </div>
-          <div className="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
+        <section className="relative flex aspect-[21/9] w-full items-end overflow-hidden rounded-[32px] bg-[var(--color-ink)]">
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="relative mx-auto flex max-w-xl flex-col items-center gap-4 p-8 text-center text-white md:p-12">
             <h2 className="text-3xl font-semibold">Наш Telegram-канал</h2>
-            <p className="text-[var(--color-ink-soft)]">
+            <p className="text-white/80">
               Новости поставщиков, новые предложения и обновления Грядки — в нашем
               Telegram-канале.
             </p>
@@ -181,7 +179,7 @@ export default async function HomePage() {
               href="https://t.me/gryadka"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-[var(--color-ink)] px-6 py-3 text-sm font-medium text-white hover:opacity-90"
+              className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[var(--color-ink)] hover:opacity-90"
             >
               Перейти в канал
             </a>
