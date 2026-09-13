@@ -6,7 +6,12 @@ function colorFor(name: string): string {
   return palette[Math.abs(hash) % palette.length];
 }
 
-export function SupplierLogo({ name }: { name: string }) {
+const sizeClasses = {
+  sm: "h-12 w-12 rounded-[var(--radius-sm)] text-sm",
+  lg: "h-20 w-20 rounded-full text-2xl",
+};
+
+export function SupplierLogo({ name, size = "sm" }: { name: string; size?: "sm" | "lg" }) {
   const initials = name
     .split(" ")
     .slice(0, 2)
@@ -16,7 +21,7 @@ export function SupplierLogo({ name }: { name: string }) {
 
   return (
     <div
-      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-sm font-semibold text-white"
+      className={`flex shrink-0 items-center justify-center font-semibold text-white ${sizeClasses[size]}`}
       style={{ backgroundColor: colorFor(name) }}
     >
       {initials}

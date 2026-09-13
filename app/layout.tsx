@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { manrope } from "@/lib/fonts";
+import { onest } from "@/lib/fonts";
 import { SiteHeader } from "@/components/site-header";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ru" className={manrope.variable}>
+    <html lang="ru" className={onest.variable}>
       <body className="font-sans pb-14 md:pb-0">
         <SiteHeader />
         {children}

@@ -83,7 +83,11 @@ export function FilterPanel() {
           />
         ))
       ) : (
-        <button type="button" onClick={() => setShowMore(true)} className="text-left text-[var(--color-accent)]">
+        <button
+          type="button"
+          onClick={() => setShowMore(true)}
+          className="text-left underline decoration-[var(--color-accent)] decoration-2 underline-offset-4"
+        >
           Ещё фильтры
         </button>
       )}

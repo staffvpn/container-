@@ -1,7 +1,7 @@
-import { Manrope } from "next/font/google";
+import { Onest } from "next/font/google";
 
-export const manrope = Manrope({
+export const onest = Onest({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-manrope",
+  variable: "--font-onest",
   display: "swap",
 });

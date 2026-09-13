@@ -108,7 +108,7 @@ export function BecomeSupplierForm() {
                 }
                 className={`rounded-full border px-4 py-1.5 text-sm ${
                   active
-                    ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
+                    ? "border-[var(--color-accent)] bg-[var(--color-accent)] font-medium"
                     : "border-[var(--color-line)]"
                 }`}
               >
@@ -123,11 +123,11 @@ export function BecomeSupplierForm() {
       <TextField label="Краткое описание" value={form.description} onChange={(v) => update("description", v)} multiline />
       <TextField label="Адрес" value={form.address} onChange={(v) => update("address", v)} />
 
-      {error && <p className="text-sm text-[var(--color-accent)]">{error}</p>}
+      {error && <p className="text-sm text-[#b3261e]">{error}</p>}
 
       <button
         type="submit"
-        className="mt-2 self-start rounded-full bg-[var(--color-accent)] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90"
+        className="mt-2 self-start rounded-full bg-[var(--color-ink)] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90"
       >
         Отправить заявку
       </button>

@@ -74,7 +74,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
         <button
           onClick={() => submit(value)}
           aria-label="Найти"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-white"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-ink)] text-white"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.7" />

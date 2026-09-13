@@ -22,11 +22,14 @@ export function MobileTabBar() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex-1 rounded-full py-1 text-center text-xs ${
-              active ? "font-medium text-[var(--color-accent)]" : "text-[var(--color-ink-soft)]"
-            }`}
+            className="flex flex-1 flex-col items-center gap-1 py-1 text-center text-xs"
           >
-            {tab.label}
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[var(--color-accent)]" : "bg-transparent"}`}
+            />
+            <span className={active ? "font-medium text-[var(--color-ink)]" : "text-[var(--color-ink-soft)]"}>
+              {tab.label}
+            </span>
           </Link>
         );
       })}

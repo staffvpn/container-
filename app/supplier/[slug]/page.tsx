@@ -60,7 +60,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           {supplier.contacts.website && (
             <a
               href={`/api/redirect?to=${encodeURIComponent(supplier.contacts.website)}&supplier=${supplier.slug}`}
-              className="rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
+              className="rounded-full bg-[var(--color-ink)] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
             >
               Перейти на сайт
             </a>
