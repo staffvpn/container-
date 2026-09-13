@@ -43,7 +43,7 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col">
-      <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-10 px-6 pb-24 pt-16 md:px-12 lg:px-20">
+      <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-10 px-6 pb-24 pt-8 md:px-12 md:pt-10 lg:px-20">
         <section className="flex flex-col items-center gap-6 text-center">
           <Link
             href="/suppliers"
@@ -69,7 +69,7 @@ export default async function HomePage() {
         </section>
 
         <section className="grid grid-cols-1 gap-4 md:grid-cols-[0.8fr_1.2fr]">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+          <div className="relative h-[440px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-farm.png"
               alt=""
@@ -85,7 +85,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] bg-[var(--color-panel)] md:aspect-auto">
+          <div className="relative h-[440px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-farm.png"
               alt=""

@@ -29,7 +29,7 @@ export function SiteFooter() {
               alt="Грядка"
               width={220}
               height={67}
-              className="h-10 w-auto brightness-0 invert"
+              className="h-10 w-auto shrink-0 self-start brightness-0 invert"
             />
             <p className="text-sm text-white/60">
               Платформа, где заведения HoReCa находят поставщиков и сравнивают условия — без
