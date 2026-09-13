@@ -162,13 +162,13 @@ export default async function HomePage() {
         <WhyGryadkaSection />
 
         <section className="flex flex-col gap-6">
-          <span className="mx-auto w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
+          <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
             Поставщики
           </span>
-          <h2 className="text-center text-3xl font-semibold md:text-4xl">
+          <h2 className="text-3xl font-semibold md:text-4xl">
             Проверенные поставщики для вашего бизнеса
           </h2>
-          <p className="mx-auto max-w-xl text-center text-[var(--color-ink-soft)]">
+          <p className="max-w-xl text-[var(--color-ink-soft)]">
             От небольших локальных производителей до крупных дистрибьюторов — с реальным
             рейтингом и условиями работы.
           </p>

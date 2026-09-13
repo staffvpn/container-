@@ -78,7 +78,7 @@ export function BecomeSupplierForm() {
         <select
           value={form.city}
           onChange={(e) => update("city", e.target.value)}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-3 py-2"
+          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] bg-[var(--color-paper)] px-3 py-2"
         >
           <option value="">Выберите город</option>
           {cities.map((city) => (
@@ -109,7 +109,7 @@ export function BecomeSupplierForm() {
                 className={`rounded-full border px-4 py-1.5 text-sm ${
                   active
                     ? "border-[var(--color-accent)] bg-[var(--color-accent)] font-medium text-white"
-                    : "border-[var(--color-line)]"
+                    : "border-[var(--color-line)] bg-[var(--color-paper)]"
                 }`}
               >
                 {category.name}
@@ -153,14 +153,14 @@ function TextField({
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-3 py-2"
+          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] bg-[var(--color-paper)] px-3 py-2"
           rows={3}
         />
       ) : (
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] px-3 py-2"
+          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] bg-[var(--color-paper)] px-3 py-2"
         />
       )}
     </label>
