@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cheri } from "@/lib/fonts";
@@ -17,11 +18,13 @@ export function SiteHeader() {
 
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
-      <Link
-        href="/"
-        className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-3xl tracking-tight`}
-      >
-        Грядка
+      <Link href="/" className="flex items-center gap-2">
+        <Image src="/images/logo.png" alt="" width={32} height={32} className="h-8 w-8" />
+        <span
+          className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-3xl tracking-tight`}
+        >
+          Грядка
+        </span>
       </Link>
 
       <nav className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1 text-sm text-[var(--color-ink-soft)]">
