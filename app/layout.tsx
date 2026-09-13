@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { onest } from "@/lib/fonts";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="font-sans pb-14 md:pb-0">
         <SiteHeader />
         {children}
+        <SiteFooter />
         <MobileTabBar />
       </body>
     </html>

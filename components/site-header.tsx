@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cheri } from "@/lib/fonts";
 
 const navItems = [
   { href: "/", label: "Главная" },
@@ -18,13 +17,8 @@ export function SiteHeader() {
 
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
-      <Link href="/" className="flex items-center gap-2">
-        <Image src="/images/logo2.png" alt="" width={32} height={32} className="h-8 w-8" />
-        <span
-          className={`${cheri.variable} font-[family-name:var(--font-cheri)] text-[34px] leading-none tracking-tight`}
-        >
-          Грядка
-        </span>
+      <Link href="/" className="flex items-center">
+        <Image src="/images/logo1.png" alt="Грядка" width={220} height={67} className="h-10 w-auto" priority />
       </Link>
 
       <nav className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1.5 text-base text-[var(--color-ink-soft)]">
