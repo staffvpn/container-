@@ -84,7 +84,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
       </div>
 
       {open && value.trim() && (
-        <div className="absolute z-20 mt-2 w-full rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-surface)] p-3 shadow-none">
+        <div className="absolute z-20 mt-2 w-full rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-surface)] p-3 shadow-[0_16px_40px_rgba(0,0,0,0.14)]">
           {!hasStructuredResults && (
             <p className="px-2 py-1 text-sm text-[var(--color-ink-soft)]">Ничего не найдено</p>
           )}

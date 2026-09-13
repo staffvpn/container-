@@ -17,7 +17,7 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col">
-      <section className="relative flex min-h-[560px] w-full items-center overflow-hidden bg-[var(--color-panel)] px-6 py-14 text-sm text-[var(--color-ink-soft)] md:min-h-[680px] md:px-16">
+      <section className="relative flex min-h-[560px] w-full items-center bg-[var(--color-panel)] px-6 py-14 text-sm text-[var(--color-ink-soft)] md:min-h-[680px] md:px-16">
         <Image
           src="/images/hero-farm.png"
           alt=""
