@@ -24,11 +24,11 @@ export default async function HomePage() {
       <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-24 px-6 py-12 md:px-12 md:py-16 lg:px-20">
         <section className="flex flex-col gap-6">
           <div className="relative overflow-visible rounded-[40px] bg-[var(--color-panel)] px-8 py-14 md:px-16 md:py-24">
-            <div className="flex max-w-2xl flex-col items-start gap-8">
+            <div className="flex max-w-3xl flex-col items-start gap-8">
               <h1 className="text-5xl font-semibold uppercase leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
                 Найдите
                 <br />
-                <span className="text-[var(--color-ink-soft)]">поставщика для</span>
+                <span className="text-[var(--color-ink-soft)]">поставщика</span> для
                 <br />
                 своего бизнеса
               </h1>
