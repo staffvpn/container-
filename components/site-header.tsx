@@ -17,7 +17,7 @@ export function SiteHeader() {
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
       <Link href="/" className="text-lg font-semibold tracking-tight">
-        Контейнер
+        Грядка
       </Link>
 
       <nav className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1 text-sm text-[var(--color-ink-soft)]">

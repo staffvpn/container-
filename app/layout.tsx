@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 
 export const metadata: Metadata = {
-  title: "Контейнер",
+  title: "Грядка",
   description: "Платформа поставщиков для HoReCa",
 };
 

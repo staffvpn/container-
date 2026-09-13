@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { StubPage } from "@/components/stub-page";
 
 export const metadata: Metadata = {
-  title: "Профиль — Контейнер",
+  title: "Профиль — Грядка",
 };
 
 export default function ProfilePage() {

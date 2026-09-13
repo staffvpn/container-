@@ -1,8 +1,8 @@
-# Контейнер — Public Site Pass 1 Implementation Plan
+# Грядка — Public Site Pass 1 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build Главная, the `/suppliers` catalog, and an individual `/supplier/[slug]` profile page for Контейнер, running on realistic hardcoded fixture data, establishing the typography-first design system the rest of the product reuses.
+**Goal:** Build Главная, the `/suppliers` catalog, and an individual `/supplier/[slug]` profile page for Грядка, running on realistic hardcoded fixture data, establishing the typography-first design system the rest of the product reuses.
 
 **Architecture:** Next.js App Router + TypeScript, server components fetch through a `lib/data` layer shaped exactly like future Supabase queries (async functions returning typed rows) so the backend sub-project swaps internals without touching pages. Tailwind CSS v4 with hand-picked design tokens (no shadcn). Interactive bits (search, filters, forms) are client components; everything else stays server-rendered.
 
@@ -155,7 +155,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Контейнер",
+  title: "Грядка",
   description: "Платформа поставщиков для HoReCa",
 };
 
@@ -172,7 +172,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ```tsx
 export default function HomePage() {
-  return <main>Контейнер</main>;
+  return <main>Грядка</main>;
 }
 ```
 
@@ -249,7 +249,7 @@ import type { ReactNode } from "react";
 import { manrope } from "@/lib/fonts";
 
 export const metadata: Metadata = {
-  title: "Контейнер",
+  title: "Грядка",
   description: "Платформа поставщиков для HoReCa",
 };
 
@@ -884,7 +884,7 @@ export function SiteHeader() {
   return (
     <header className="hidden md:flex items-center justify-between border-b border-[var(--color-line)] px-8 py-4">
       <Link href="/" className="text-lg font-semibold tracking-tight">
-        Контейнер
+        Грядка
       </Link>
       <nav className="flex items-center gap-6 text-sm text-[var(--color-ink-soft)]">
         {navItems.map((item) => (
@@ -996,7 +996,7 @@ import { SiteHeader } from "@/components/site-header";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 
 export const metadata: Metadata = {
-  title: "Контейнер",
+  title: "Грядка",
   description: "Платформа поставщиков для HoReCa",
 };
 
@@ -1247,7 +1247,7 @@ import { categories } from "@/lib/data/fixtures/categories";
 const statusLabel: Record<Supplier["status"], string | null> = {
   unverified: null,
   confirmed: "Профиль подтвержден",
-  verified: "Проверен Контейнером",
+  verified: "Проверен Грядкой",
 };
 
 export function SupplierCard({ supplier }: { supplier: Supplier }) {
@@ -1611,7 +1611,7 @@ Add this section right before the closing `</main>`:
       <section className="flex flex-col items-center gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-8 text-center">
         <h2 className="text-2xl font-semibold">Стать поставщиком</h2>
         <p className="max-w-xl text-[var(--color-ink-soft)]">
-          Разместите компанию в Контейнере и получайте заявки от заведений HoReCa.
+          Разместите компанию в Грядке и получайте заявки от заведений HoReCa.
         </p>
         <div className="w-full max-w-xl text-left">
           <BecomeSupplierForm />
@@ -2007,7 +2007,7 @@ import { ShareButton } from "@/components/share-button";
 const statusLabel: Record<string, string | null> = {
   unverified: null,
   confirmed: "Профиль подтвержден",
-  verified: "Проверен Контейнером",
+  verified: "Проверен Грядкой",
 };
 
 export default async function SupplierPage({ params }: { params: Promise<{ slug: string }> }) {

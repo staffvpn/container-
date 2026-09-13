@@ -1,11 +1,11 @@
-# Контейнер — Public Site, Pass 1 (Главная / Поставщики / карточка поставщика)
+# Грядка — Public Site, Pass 1 (Главная / Поставщики / карточка поставщика)
 
 **Date:** 2026-09-13
 **Status:** approved for planning
 
 ## Context
 
-Контейнер is a B2B directory for HoReCa businesses to find and compare suppliers
+Грядка is a B2B directory for HoReCa businesses to find and compare suppliers
 (cafés, restaurants, bars, hotels, catering → coffee roasters, distributors,
 equipment, packaging, furniture, IT/services). It is explicitly **not** a
 storefront or product catalog — no per-SKU pricing, no cart, no checkout.
@@ -111,7 +111,7 @@ omitted, not set to placeholder text — pages must hide the row entirely
   (40–56px), restrained body (14–16px), a consistent modular scale between.
 - **Color**: near-black text on off-white background, one accent color used
   only for primary CTAs and active/selected states — not decoratively.
-  Status text (Подтвержден / Проверен Контейнером) uses a quiet icon + text
+  Status text (Подтвержден / Проверен Грядкой) uses a quiet icon + text
   treatment, never a loud badge.
 - **Spacing**: 8pt scale throughout, generous section padding — "much air"
   per the brief.

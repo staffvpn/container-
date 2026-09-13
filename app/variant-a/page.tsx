@@ -13,7 +13,7 @@ export default async function VariantA() {
   return (
     <main className={`${unbounded.variable} min-h-screen bg-[#0e0f12] font-[family-name:var(--font-variant-a)] text-[#f5f5f2]`}>
       <header className="flex items-center justify-between px-8 py-6">
-        <span className="text-lg font-bold tracking-tight">Контейнер</span>
+        <span className="text-lg font-bold tracking-tight">Грядка</span>
         <nav className="hidden gap-8 text-sm text-[#a6a8ad] md:flex">
           <span>Поставщики</span>
           <span>Карта</span>

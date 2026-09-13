@@ -58,14 +58,14 @@ export function BecomeSupplierForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-8 text-center">
+      <div className="py-8 text-center">
         <p className="font-medium">Заявка отправлена. После проверки профиль будет опубликован.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--color-line)] p-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <TextField label="Название компании *" value={form.companyName} onChange={(v) => update("companyName", v)} />
       <TextField label="Имя контактного лица *" value={form.contactName} onChange={(v) => update("contactName", v)} />
       <TextField label="Телефон *" value={form.phone} onChange={(v) => update("phone", v)} />

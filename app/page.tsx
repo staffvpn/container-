@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getSuppliers, getCategories } from "@/lib/data/suppliers";
 import { offers } from "@/lib/data/fixtures/offers";
 import { cities } from "@/lib/data/fixtures/cities";
@@ -5,7 +6,7 @@ import { SearchBar } from "@/components/search-bar";
 import { CategoryCard } from "@/components/category-card";
 import { SupplierCard } from "@/components/supplier-card";
 import { OfferTeaserCard } from "@/components/offer-teaser-card";
-import { BecomeSupplierForm } from "@/components/become-supplier-form";
+import { BecomeSupplierSection } from "@/components/become-supplier-section";
 
 export default async function HomePage() {
   const [categories, popularSuppliers] = await Promise.all([
@@ -17,7 +18,15 @@ export default async function HomePage() {
   return (
     <main className="flex flex-col">
       <section className="relative flex min-h-[560px] w-full items-center overflow-hidden bg-[var(--color-panel)] px-6 py-14 text-sm text-[var(--color-ink-soft)] md:min-h-[680px] md:px-16">
-        {/* Full-bleed photo goes here (replaces this placeholder fill) */}
+        <Image
+          src="/images/hero-farm.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-white/10 to-transparent" />
 
         <div className="relative z-10 mx-auto w-full max-w-[1800px]">
           <div className="flex w-full max-w-xl flex-col items-start gap-8 rounded-[32px] bg-[var(--color-surface)]/90 p-8 backdrop-blur md:p-10">
@@ -97,18 +106,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section
-          id="become-supplier"
-          className="flex flex-col items-center gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-8 text-center"
-        >
-          <h2 className="text-3xl font-semibold md:text-4xl">Стать поставщиком</h2>
-          <p className="max-w-xl text-[var(--color-ink-soft)]">
-            Разместите компанию в Контейнере и получайте заявки от заведений HoReCa.
-          </p>
-          <div className="w-full max-w-xl text-left">
-            <BecomeSupplierForm />
-          </div>
-        </section>
+        <BecomeSupplierSection />
       </div>
     </main>
   );

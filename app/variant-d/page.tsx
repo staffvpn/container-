@@ -15,7 +15,7 @@ export default async function VariantD() {
       className={`${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-white font-[family-name:var(--font-variant-d-body)] text-[#111827]`}
     >
       <header className="flex items-center justify-between border-b border-[#e5e7eb] px-8 py-5">
-        <span className="text-lg font-semibold tracking-tight">Контейнер</span>
+        <span className="text-lg font-semibold tracking-tight">Грядка</span>
         <nav className="hidden gap-8 text-sm text-[#6b7280] md:flex">
           <span className="border-b-2 border-[#0f7a6b] pb-4 -mb-4 text-[#0f7a6b]">Поставщики</span>
           <span>Карта</span>

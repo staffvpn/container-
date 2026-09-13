@@ -15,7 +15,7 @@ export default async function VariantE() {
       className={`${robotoSlab.variable} ${golosText.variable} min-h-screen bg-[#faf9f5] font-[family-name:var(--font-variant-b-body)] text-[#1a1a1a]`}
     >
       <header className="flex items-center justify-between border-b-4 border-[#1a1a1a] px-8 py-5">
-        <span className="font-[family-name:var(--font-variant-e)] text-xl font-bold">Контейнер</span>
+        <span className="font-[family-name:var(--font-variant-e)] text-xl font-bold">Грядка</span>
         <nav className="hidden gap-8 text-sm md:flex">
           <span>Поставщики</span>
           <span>Карта</span>
@@ -62,7 +62,7 @@ export default async function VariantE() {
             <span className="font-[family-name:var(--font-variant-e)] text-xs font-bold uppercase leading-tight tracking-wider text-[#c23b22]">
               Проверено
               <br />
-              Контейнером
+              Грядкой
             </span>
           </div>
         </div>

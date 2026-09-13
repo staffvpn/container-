@@ -16,7 +16,7 @@ export default async function VariantB() {
     >
       <header className="flex items-center justify-between border-b border-[#d8d6cf] px-8 py-5">
         <span className="font-[family-name:var(--font-variant-b-display)] text-xl font-semibold">
-          Контейнер
+          Грядка
         </span>
         <nav className="hidden gap-8 border-b border-transparent text-sm md:flex">
           <span className="border-b border-[#7a2e2e] pb-1 text-[#7a2e2e]">Поставщики</span>

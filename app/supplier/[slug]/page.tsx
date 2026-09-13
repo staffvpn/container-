@@ -10,7 +10,7 @@ import { ShareButton } from "@/components/share-button";
 const statusLabel: Record<string, string | null> = {
   unverified: null,
   confirmed: "Профиль подтвержден",
-  verified: "Проверен Контейнером",
+  verified: "Проверен Грядкой",
 };
 
 export async function generateMetadata({
@@ -21,10 +21,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const supplier = await getSupplierBySlug(slug);
   if (!supplier) {
-    return { title: "Поставщик не найден — Контейнер" };
+    return { title: "Поставщик не найден — Грядка" };
   }
   return {
-    title: `${supplier.name} — Контейнер`,
+    title: `${supplier.name} — Грядка`,
     description: supplier.shortDescription,
   };
 }
@@ -81,7 +81,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
               Telegram
             </a>
           )}
-          <ShareButton title={supplier.name} url={`https://container.example/supplier/${supplier.slug}`} />
+          <ShareButton title={supplier.name} url={`https://gryadka.example/supplier/${supplier.slug}`} />
         </div>
       </section>
 

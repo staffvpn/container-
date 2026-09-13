@@ -8,7 +8,7 @@ import { SortDropdown } from "@/components/sort-dropdown";
 import type { SupplierFilters } from "@/lib/data/types";
 
 export const metadata: Metadata = {
-  title: "Поставщики — Контейнер",
+  title: "Поставщики — Грядка",
   description: "Найдите поставщика для кофейни, ресторана, бара или другого заведения HoReCa.",
 };
 

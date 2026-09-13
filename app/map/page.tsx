@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { StubPage } from "@/components/stub-page";
 
 export const metadata: Metadata = {
-  title: "Карта — Контейнер",
+  title: "Карта — Грядка",
 };
 
 export default function MapPage() {
