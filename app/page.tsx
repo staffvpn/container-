@@ -114,7 +114,7 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center justify-between px-1">
                   <span className="font-medium">{segment.name}</span>
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] group-hover:bg-[var(--color-accent)]">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface)] group-hover:bg-[var(--color-accent)] group-hover:text-white">
                     <ArrowIconButton />
                   </span>
                 </div>

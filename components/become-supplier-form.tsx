@@ -108,7 +108,7 @@ export function BecomeSupplierForm() {
                 }
                 className={`rounded-full border px-4 py-1.5 text-sm ${
                   active
-                    ? "border-[var(--color-accent)] bg-[var(--color-accent)] font-medium"
+                    ? "border-[var(--color-accent)] bg-[var(--color-accent)] font-medium text-white"
                     : "border-[var(--color-line)]"
                 }`}
               >

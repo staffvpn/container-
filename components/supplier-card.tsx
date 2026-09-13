@@ -59,7 +59,7 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
       <Link
         href={`/supplier/${supplier.slug}`}
         aria-label={`Открыть профиль ${supplier.name}`}
-        className="absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-ink)] hover:opacity-90"
+        className="absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-white hover:opacity-90"
       >
         <ArrowIconButton />
       </Link>

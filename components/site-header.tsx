@@ -35,7 +35,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={`rounded-full px-5 py-3 transition-colors ${
-                active ? "bg-[var(--color-accent)] text-[var(--color-ink)]" : "hover:text-[var(--color-ink)]"
+                active ? "bg-[var(--color-accent)] text-white" : "hover:text-[var(--color-ink)]"
               }`}
             >
               {item.label}

@@ -3,14 +3,15 @@
 @theme {
   --font-sans: var(--font-onest), system-ui, sans-serif;
 
-  --color-ink: #141414;
-  --color-ink-soft: #6b6b68;
-  --color-paper: #f0f0ee;
-  --color-surface: #ffffff;
-  --color-panel: #e8e8e5;
-  --color-line: #dedede;
-  --color-accent: #c6ff4d;
-  --color-accent-soft: #eaffc9;
+  --color-ink: #252525;
+  --color-accent: #3c673a;
+  --color-paper: #f7efed;
+  --color-surface: #feefe3;
+
+  --color-ink-soft: color-mix(in srgb, var(--color-ink) 58%, var(--color-paper) 42%);
+  --color-line: color-mix(in srgb, var(--color-ink) 12%, var(--color-paper) 88%);
+  --color-panel: color-mix(in srgb, var(--color-ink) 5%, var(--color-surface) 95%);
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface) 86%);
 
   --radius-sm: 10px;
   --radius-md: 24px;
