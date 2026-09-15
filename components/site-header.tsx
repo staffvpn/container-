@@ -17,18 +17,18 @@ export function SiteHeader() {
 
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
-      <Link href="/" className="flex items-center">
+      <Link href="/" className="flex h-14 items-center">
         <Image src="/images/logo1.png" alt="Грядка" width={220} height={67} className="h-10 w-auto" priority />
       </Link>
 
-      <nav className="flex items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] p-1.5 text-base text-[var(--color-ink-soft)]">
+      <nav className="flex h-14 items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-1.5 text-base text-[var(--color-ink-soft)]">
         {navItems.map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-5 py-3 transition-colors ${
+              className={`flex h-11 items-center rounded-full px-5 transition-colors ${
                 active ? "bg-[var(--color-accent)] text-white" : "hover:text-[var(--color-ink)]"
               }`}
             >
@@ -40,7 +40,7 @@ export function SiteHeader() {
 
       <Link
         href="/profile"
-        className="rounded-full bg-[var(--color-ink)] px-6 py-3 text-base text-white hover:opacity-90"
+        className="flex h-14 items-center rounded-full bg-[var(--color-ink)] px-6 text-base text-white hover:opacity-90"
       >
         Профиль
       </Link>
