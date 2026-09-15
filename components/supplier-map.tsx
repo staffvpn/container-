@@ -52,6 +52,23 @@ export function SupplierMap({
         map.setLayerZoomRange("building", 13, 24);
       }
 
+      // Drop POI icons/labels (shops, cafes, ATMs, parking, info points,
+      // etc. — every one of the "liberty" style's 4 poi_* layers) and the
+      // dashed pedestrian-path lines (roads, bridges, tunnels) — visual
+      // noise for a supplier directory, not information anyone needs here.
+      for (const id of [
+        "poi_r20",
+        "poi_r7",
+        "poi_r1",
+        "poi_transit",
+        "road_path_pedestrian",
+        "tunnel_path_pedestrian",
+        "bridge_path_pedestrian",
+        "bridge_path_pedestrian_casing",
+      ]) {
+        if (map.getLayer(id)) map.removeLayer(id);
+      }
+
       // The "liberty" style ships the housenumber source-layer in its
       // vector tiles but never renders it — add it ourselves, visible
       // only once you're zoomed in close enough for individual
