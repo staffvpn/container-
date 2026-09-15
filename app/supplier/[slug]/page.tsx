@@ -7,6 +7,7 @@ import { ReviewsList } from "@/components/reviews-list";
 import { ReviewForm } from "@/components/review-form";
 import { ErrorReportButton } from "@/components/error-report-button";
 import { TrackedLink } from "@/components/tracked-link";
+import { ClaimOwnershipSection } from "@/components/claim-ownership-section";
 
 const statusLabel: Record<string, string | null> = {
   unverified: null,
@@ -93,7 +94,10 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           )}
           <ShareButton title={supplier.name} url={`https://gryadka.example/supplier/${supplier.slug}`} />
         </div>
-        <ErrorReportButton supplierSlug={supplier.slug} />
+        <div className="flex items-center gap-4">
+          <ErrorReportButton supplierSlug={supplier.slug} />
+          <ClaimOwnershipSection supplierSlug={supplier.slug} />
+        </div>
       </section>
 
       <section className="flex flex-col gap-3">

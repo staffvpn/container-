@@ -40,6 +40,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           Поставщики
         </Link>
         <Link
+          href="/admin/claims"
+          className="rounded-[var(--radius-sm)] px-3 py-2 text-sm hover:bg-[var(--color-panel)]"
+        >
+          Заявки на владение
+        </Link>
+        <Link
           href="/admin/audit"
           className="rounded-[var(--radius-sm)] px-3 py-2 text-sm hover:bg-[var(--color-panel)]"
         >
