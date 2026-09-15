@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { getSuppliers } from "@/lib/data/suppliers";
-import { offers } from "@/lib/data/fixtures/offers";
+import { getSuppliers, getOffers } from "@/lib/data/suppliers";
 import { OfferCard } from "@/components/offer-card";
 import { OffersFilterBar } from "@/components/offers-filter-bar";
 
@@ -25,9 +24,9 @@ export default async function OffersPage({
   const category = readParam(params, "category");
   const city = readParam(params, "city");
 
-  const suppliers = await getSuppliers();
+  const [suppliers, allOffers] = await Promise.all([getSuppliers(), getOffers()]);
 
-  const filteredOffers = offers.filter((offer) => {
+  const filteredOffers = allOffers.filter((offer) => {
     if (category && offer.category !== category) return false;
     if (city && offer.city !== city) return false;
     return true;
