@@ -19,6 +19,7 @@
 - `lib/data/suppliers.ts`'s exported function names, parameters, and return types are unchanged: `getSuppliers(filters): Promise<Supplier[]>`, `getSupplierBySlug(slug): Promise<Supplier | null>`, `getCategories(): Promise<Category[]>`, `getCities(): Promise<City[]>`, `getOffers(supplierSlug?): Promise<Offer[]>`, `searchSuppliers(query): Promise<SearchResult>`.
 - Every Edge Function includes CORS headers (`OPTIONS` preflight branch) — a real bug on FASDELY was an Edge Function with none, invisible until a browser actually called it.
 - Site language stays Russian in every user-facing string.
+- If `npm run dev` is being kept running for live viewing (e.g. the user watching in a browser), do not run `npm run build` while it's up — both write to the same `.next` directory and building corrupts the live dev server's output (confirmed live: the homepage returned 500 immediately after a `build` ran alongside an active `dev`). Prefer `npm test` (a separate process, safe to run anytime) plus a manual `curl`/browser check for each task's verification instead; reserve `npm run build` for a point where dev is not being watched, and restart dev immediately after.
 
 ---
 
