@@ -703,12 +703,14 @@ git commit --allow-empty -am "chore: backend foundation — applications, sugges
 **Files:**
 - Create: `lib/supabase/client.ts`
 - Create: `lib/supabase/server.ts`
+- Create: `lib/supabase/public.ts`
 - Create: `.env.local` (not committed — gitignored)
 - Modify: `.env.example` (create if it doesn't exist)
 - Modify: `package.json` (add dependencies)
+- Modify: `vitest.config.ts`
 
 **Interfaces:**
-- Produces: `createBrowserSupabaseClient(): SupabaseClient` (for Client Components), `createServerSupabaseClient(): Promise<SupabaseClient>` (for Server Components, reads/writes the Next.js cookie store for session persistence).
+- Produces: `createBrowserSupabaseClient(): SupabaseClient` (for Client Components), `createServerSupabaseClient(): Promise<SupabaseClient>` (for Server Components that need the current user's session — e.g. `/profile` in Task 11), `createSupabasePublicClient(): SupabaseClient` (for anonymous, RLS-scoped public reads — this is what `lib/data/suppliers.ts` uses in Tasks 7-9 and 14, since none of those queries need a user's session).
 
 - [ ] **Step 1: Get project URL and anon key**
 
@@ -788,19 +790,63 @@ export async function createServerSupabaseClient() {
 }
 ```
 
-- [ ] **Step 6: Verify it builds**
+- [ ] **Step 6: Write the public (session-free) client**
+
+`createServerSupabaseClient` depends on `next/headers`' `cookies()`, which only works inside an actual Next.js request (a Server Component render or Route Handler) — calling it from a plain Vitest test throws `cookies was called outside a request scope`. None of `lib/data/suppliers.ts`'s reads (Tasks 7-9, 14) need a user's session at all — they're anonymous, RLS-scoped-to-published reads — so give them a client that isn't request-bound. Create `lib/supabase/public.ts`:
+
+```typescript
+import { createClient } from "@supabase/supabase-js";
+
+export function createSupabasePublicClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } },
+  );
+}
+```
+
+The `auth` options aren't optional polish — without them, `@supabase/supabase-js`'s auth client tries to manage session storage/locking on initialization, and under Node/Vitest (no `localStorage`, no browser lock APIs) that hangs indefinitely rather than erroring: a real symptom hit while executing this plan was `getCategories`'s test timing out at 5000ms with no error message, which traced back to exactly this. `persistSession: false` skips that machinery entirely, which is also the semantically correct choice for a client that has no session to persist in the first place.
+
+- [ ] **Step 7: Make Vitest load `.env.local`**
+
+Next's own `npm run dev`/`npm run build` load `.env.local` automatically; a plain `vitest run` does not, so `process.env.NEXT_PUBLIC_SUPABASE_URL` is `undefined` under `npm test` unless the Vitest config loads it explicitly (surfaces as `Error: supabaseUrl is required.` if skipped). Modify `vitest.config.ts`:
+
+```typescript
+import { defineConfig } from "vitest/config";
+import { loadEnv } from "vite";
+import path from "node:path";
+
+const env = loadEnv("test", process.cwd(), "");
+for (const [key, value] of Object.entries(env)) {
+  process.env[key] = value;
+}
+
+export default defineConfig({
+  test: {
+    environment: "node",
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "."),
+    },
+  },
+});
+```
+
+- [ ] **Step 8: Verify it builds**
 
 ```bash
 npm run build
 ```
 
-Expect a clean build (no runtime call is made yet — these are unused exports until Task 8).
+Expect a clean build (no runtime call is made yet — these are unused exports until Task 7).
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
-git add lib/supabase/client.ts lib/supabase/server.ts .env.example package.json package-lock.json
-git commit -m "feat: wire up Supabase client (browser + server)"
+git add lib/supabase/client.ts lib/supabase/server.ts lib/supabase/public.ts .env.example package.json package-lock.json vitest.config.ts
+git commit -m "feat: wire up Supabase client (browser + server + public)"
 ```
 
 ---
@@ -812,7 +858,7 @@ git commit -m "feat: wire up Supabase client (browser + server)"
 - Modify: `lib/data/suppliers.test.ts`
 
 **Interfaces:**
-- Consumes: `createServerSupabaseClient` (Task 6).
+- Consumes: `createSupabasePublicClient` (Task 6).
 - Produces (unchanged): `getCategories(): Promise<Category[]>`, `getCities(): Promise<City[]>`.
 
 - [ ] **Step 1: Update the test to not assume fixture-array identity**
@@ -837,7 +883,7 @@ with:
 
 ```typescript
 export async function getCategories(): Promise<Category[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("categories")
     .select("slug, name")
@@ -847,7 +893,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getCities(): Promise<City[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("cities")
     .select("slug, name, lat, lng")
@@ -857,7 +903,7 @@ export async function getCities(): Promise<City[]> {
 }
 ```
 
-Add the import at the top of the file: `import { createServerSupabaseClient } from "@/lib/supabase/server";`. Leave `allCategories`/`allCities` imports in place for now — later steps in this task remove them once nothing references them.
+Add the import at the top of the file: `import { createSupabasePublicClient } from "@/lib/supabase/public";`. Leave `allCategories`/`allCities` imports in place for now — later steps in this task remove them once nothing references them.
 
 - [ ] **Step 3: Run the existing tests**
 
@@ -970,7 +1016,7 @@ Replace the function body:
 
 ```typescript
 export async function getSuppliers(filters: SupplierFilters = {}): Promise<Supplier[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   let query = supabase
     .from("suppliers")
     .select(SUPPLIER_SELECT)
@@ -1026,7 +1072,7 @@ export async function getSuppliers(filters: SupplierFilters = {}): Promise<Suppl
 
 ```typescript
 export async function getSupplierBySlug(slug: string): Promise<Supplier | null> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("suppliers")
     .select(SUPPLIER_SELECT)
@@ -1044,7 +1090,7 @@ export async function getSupplierBySlug(slug: string): Promise<Supplier | null> 
 
 ```typescript
 export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   let query = supabase
     .from("offers")
     .select("id, title, description, expires_at, categories(slug), suppliers!inner(slug, cities(slug)), promo_codes(code)")
@@ -1127,7 +1173,7 @@ async function filterByQuery(candidates: Supplier[], query: string): Promise<Sup
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   const [{ data: cities }, { data: categories }] = await Promise.all([
     supabase.from("cities").select("slug, name"),
     supabase.from("categories").select("slug, name"),
@@ -1175,7 +1221,7 @@ export async function searchSuppliers(query: string): Promise<SearchResult> {
   const q = query.trim();
   if (!q) return { companies: [], categories: [], cities: [] };
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   const { data: allPublished, error } = await supabase
     .from("suppliers")
     .select(SUPPLIER_SELECT)
@@ -1967,7 +2013,7 @@ export interface Review {
 
 ```typescript
 export async function getReviews(supplierSlug: string): Promise<Review[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("reviews")
     .select("id, overall_rating, price_rating, quality_rating, delivery_rating, service_rating, comment, created_at, profiles(display_name), suppliers!inner(slug)")

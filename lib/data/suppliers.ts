@@ -3,6 +3,7 @@ import { categories as allCategories } from "./fixtures/categories";
 import { cities as allCities } from "./fixtures/cities";
 import { offers as allOffers } from "./fixtures/offers";
 import { scoreSupplier } from "./scoring";
+import { createSupabasePublicClient } from "@/lib/supabase/public";
 import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult } from "./types";
 
 export async function getSuppliers(filters: SupplierFilters = {}): Promise<Supplier[]> {
@@ -54,11 +55,23 @@ export async function getSupplierBySlug(slug: string): Promise<Supplier | null> 
 }
 
 export async function getCategories(): Promise<Category[]> {
-  return allCategories.slice();
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("slug, name")
+    .order("sort_order");
+  if (error) throw error;
+  return data;
 }
 
 export async function getCities(): Promise<City[]> {
-  return allCities.slice();
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("cities")
+    .select("slug, name, lat, lng")
+    .order("name");
+  if (error) throw error;
+  return data;
 }
 
 export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
