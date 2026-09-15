@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getSuppliers, getCategories } from "@/lib/data/suppliers";
-import { offers } from "@/lib/data/fixtures/offers";
-import { cities } from "@/lib/data/fixtures/cities";
+import { getSuppliers, getCategories, getCities, getOffers } from "@/lib/data/suppliers";
 import { SearchBar } from "@/components/search-bar";
 import { CategoryCard } from "@/components/category-card";
 import { SupplierCard } from "@/components/supplier-card";
@@ -35,9 +33,11 @@ const segments = [
 ];
 
 export default async function HomePage() {
-  const [categories, popularSuppliers] = await Promise.all([
+  const [categories, cities, popularSuppliers, offers] = await Promise.all([
     getCategories(),
+    getCities(),
     getSuppliers({ sort: "rating" }),
+    getOffers(),
   ]);
   const topSuppliers = popularSuppliers.slice(0, 6);
 
@@ -210,7 +210,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <BecomeSupplierSection />
+        <BecomeSupplierSection categories={categories} cities={cities} />
       </div>
     </main>
   );

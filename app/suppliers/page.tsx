@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getSuppliers } from "@/lib/data/suppliers";
+import { getSuppliers, getCategories, getCities } from "@/lib/data/suppliers";
 import { SearchBar } from "@/components/search-bar";
 import { SupplierCard } from "@/components/supplier-card";
 import { FilterPanel } from "@/components/filter-panel";
@@ -35,7 +35,11 @@ export default async function SuppliersPage({
     sort: (readParam(params, "sort") as SupplierFilters["sort"]) ?? "recommended",
   };
 
-  const suppliers = await getSuppliers(filters);
+  const [suppliers, categories, cities] = await Promise.all([
+    getSuppliers(filters),
+    getCategories(),
+    getCities(),
+  ]);
 
   return (
     <main className="mx-auto flex max-w-[1800px] flex-col gap-8 px-6 py-10 md:px-12 lg:px-20">
@@ -43,7 +47,7 @@ export default async function SuppliersPage({
 
       <div className="flex flex-col gap-8 md:flex-row">
         <aside className="w-full shrink-0 md:w-56">
-          <FilterPanel />
+          <FilterPanel categories={categories} cities={cities} />
         </aside>
 
         <div className="flex flex-1 flex-col gap-6">

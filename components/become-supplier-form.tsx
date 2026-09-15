@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { categories } from "@/lib/data/fixtures/categories";
-import { cities } from "@/lib/data/fixtures/cities";
+import type { Category, City } from "@/lib/data/types";
 
 const fields = [
   "companyName",
@@ -36,7 +35,7 @@ const initialState: FormState = {
 
 const requiredFields: FieldName[] = ["companyName", "contactName", "phone", "email", "city"];
 
-export function BecomeSupplierForm() {
+export function BecomeSupplierForm({ categories, cities }: { categories: Category[]; cities: City[] }) {
   const [form, setForm] = useState<FormState>(initialState);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);

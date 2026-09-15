@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { categories } from "@/lib/data/fixtures/categories";
-import { cities } from "@/lib/data/fixtures/cities";
+import type { Category, City } from "@/lib/data/types";
 
 const booleanFilters = [
   { key: "delivery", label: "Доставка" },
@@ -11,7 +10,7 @@ const booleanFilters = [
   { key: "confirmed", label: "Подтвержденный профиль" },
 ] as const;
 
-export function FilterPanel() {
+export function FilterPanel({ categories, cities }: { categories: Category[]; cities: City[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showMore, setShowMore] = useState(false);

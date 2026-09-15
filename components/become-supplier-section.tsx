@@ -2,8 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { BecomeSupplierForm } from "./become-supplier-form";
+import type { Category, City } from "@/lib/data/types";
 
-export function BecomeSupplierSection() {
+export function BecomeSupplierSection({
+  categories,
+  cities,
+}: {
+  categories: Category[];
+  cities: City[];
+}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -58,7 +65,7 @@ export function BecomeSupplierSection() {
               </svg>
             </button>
             <h2 className="mb-6 text-xl font-semibold">Стать поставщиком</h2>
-            <BecomeSupplierForm />
+            <BecomeSupplierForm categories={categories} cities={cities} />
           </div>
         </div>
       )}
