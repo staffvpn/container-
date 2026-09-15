@@ -6,14 +6,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { Supplier, City } from "@/lib/data/types";
 import { supplierLocation } from "@/lib/data/geo";
 
-// Roughly European Russia + Siberia — wide enough to cover every seeded
-// city, tight enough that panning can't drift into an empty world map.
-// MapLibre bounds are [[west, south], [east, north]] in [lng, lat] order.
-const russiaBounds: [[number, number], [number, number]] = [
-  [18, 38],
-  [100, 72],
-];
-
 export function SupplierMap({
   suppliers,
   cities,
@@ -35,8 +27,7 @@ export function SupplierMap({
       style: "https://tiles.openfreemap.org/styles/liberty",
       center: focusCenter ? [focusCenter[1], focusCenter[0]] : [55, 56.5],
       zoom: focusCenter ? 11 : 2.5,
-      minZoom: 2,
-      maxBounds: russiaBounds,
+      minZoom: 1,
     });
     map.addControl(new NavigationControl(), "top-right");
     map.on("load", () => {
