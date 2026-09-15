@@ -1307,10 +1307,14 @@ git commit -m "feat: back searchSuppliers/getSuppliers with real Supabase querie
 
 ### Task 10: Fix the `FilterPanel`/`BecomeSupplierForm` fixture-import debt
 
+Executing this task also surfaced `app/page.tsx` importing `offers` (used) and `cities` (unused) directly from fixtures — outside this task's originally-scoped two components, but the same debt category and the single most-visible page, so it was fixed in the same pass: `getOffers()` added to the homepage's `Promise.all`, the dead `cities` fixture import removed, and `getCities()` added instead to supply the `BecomeSupplierSection`/`BecomeSupplierForm` props below.
+
 **Files:**
 - Modify: `components/filter-panel.tsx`
 - Modify: `components/become-supplier-form.tsx`
-- Modify: every Server Component that renders either of them (find via grep in Step 1)
+- Modify: `components/become-supplier-section.tsx` (props pass-through to `BecomeSupplierForm`)
+- Modify: `app/page.tsx` (fetches categories/cities/offers, passes props to `BecomeSupplierSection`)
+- Modify: every other Server Component that renders either of them (find via grep in Step 1)
 
 **Interfaces:**
 - `FilterPanel` and `BecomeSupplierForm` gain a required prop `{ categories: Category[]; cities: City[] }` instead of importing the fixture arrays.
