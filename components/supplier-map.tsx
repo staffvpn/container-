@@ -50,41 +50,37 @@ export function SupplierMap({
   ];
 
   return (
-    <div className="flex h-full w-full items-center justify-center bg-[var(--color-paper)] p-6">
-      <div className="aspect-square h-full max-h-[720px] w-full max-w-[720px] overflow-hidden rounded-full border border-[var(--color-line)] shadow-[0_0_0_6px_var(--color-panel)]">
-        <MapContainer
-          center={focusCenter ?? [56.5, 55]}
-          zoom={focusCenter ? 11 : 3}
-          minZoom={3}
-          maxBounds={russiaBounds}
-          maxBoundsViscosity={1}
-          scrollWheelZoom
-          className="h-full w-full"
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          />
-          <FlyToCity center={focusCenter} />
+    <MapContainer
+      center={focusCenter ?? [56.5, 55]}
+      zoom={focusCenter ? 11 : 3}
+      minZoom={3}
+      maxBounds={russiaBounds}
+      maxBoundsViscosity={1}
+      scrollWheelZoom
+      className="h-full w-full"
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+      />
+      <FlyToCity center={focusCenter} />
 
-          {points.map(({ supplier, location }) => (
-            <Marker key={supplier.slug} position={[location.lat, location.lng]} icon={markerIcon}>
-              <Popup>
-                <div className="flex min-w-[200px] flex-col gap-1">
-                  <p className="font-semibold text-[var(--color-ink)]">{supplier.name}</p>
-                  <p className="text-sm text-[var(--color-ink-soft)]">★ {supplier.rating.toFixed(1)}</p>
-                  <Link
-                    href={`/supplier/${supplier.slug}`}
-                    className="mt-1 text-sm font-medium text-[var(--color-accent)] underline"
-                  >
-                    Открыть
-                  </Link>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
-    </div>
+      {points.map(({ supplier, location }) => (
+        <Marker key={supplier.slug} position={[location.lat, location.lng]} icon={markerIcon}>
+          <Popup>
+            <div className="flex min-w-[200px] flex-col gap-1">
+              <p className="font-semibold text-[var(--color-ink)]">{supplier.name}</p>
+              <p className="text-sm text-[var(--color-ink-soft)]">★ {supplier.rating.toFixed(1)}</p>
+              <Link
+                href={`/supplier/${supplier.slug}`}
+                className="mt-1 text-sm font-medium text-[var(--color-accent)] underline"
+              >
+                Открыть
+              </Link>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
 }
