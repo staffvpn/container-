@@ -2542,15 +2542,56 @@ git commit -m "feat: Сообщить об ошибке (submit-error-report fun
 
 ### Task 16: Analytics event tracking
 
+Executing this task surfaced a real pre-existing bug: the supplier page's "Перейти на сайт" button already linked to `/api/redirect?to=...&supplier=...` (matching §14's tracking-redirect requirement from Pass 1), but that route was never actually built — clicking it 404ed. Fixed by creating `app/api/redirect/route.ts`, a Route Handler that resolves the supplier slug to its id, writes a `click_website` row to `analytics_events`, then issues the redirect — this is a better home for that specific event than the client-side `trackEvent` helper below, since it can't be skipped by disabling JS and matches the spec's "internal tracking redirect" language exactly. `components/category-card.tsx` was not modified — `view_category` tracking is schema-ready but out of scope for this pass per the analytics-scope amendment in the design spec (no admin dashboard exists yet to read it).
+
 **Files:**
 - Create: `lib/analytics/track-event.ts`
+- Create: `app/api/redirect/route.ts` (fixes the pre-existing 404, implements §14's website-click tracking redirect)
 - Modify: `components/promo-code-button.tsx`
-- Modify: `app/supplier/[slug]/page.tsx` (website/telegram/phone click handlers — likely currently plain `<a>` tags; read first)
+- Modify: `app/supplier/[slug]/page.tsx` (telegram/phone click handlers via a new `TrackedLink` component; website click is handled entirely by the redirect route above, no client-side tracking needed for it)
 - Modify: `components/search-bar.tsx` (search submission)
-- Modify: `components/category-card.tsx` (category click)
 
 **Interfaces:**
 - Produces: `trackEvent(input: { eventType: string; supplierId?: string; offerId?: string; promoCodeId?: string; categorySlug?: string; citySlug?: string; queryText?: string; sourcePage?: string }): void` — fire-and-forget, never throws, never blocks the UI it's called from.
+
+- [ ] **Step 0: Build the missing website-click tracking redirect**
+
+Create `app/api/redirect/route.ts` — this is the real fix for the pre-existing 404 described above, and implements §14's requirement directly (resolve the supplier, record the click, redirect to the unmodified URL):
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { createSupabasePublicClient } from "@/lib/supabase/public";
+
+export async function GET(request: NextRequest) {
+  const to = request.nextUrl.searchParams.get("to");
+  const supplierSlug = request.nextUrl.searchParams.get("supplier");
+
+  if (!to) {
+    return NextResponse.json({ error: "missing to" }, { status: 400 });
+  }
+
+  if (supplierSlug) {
+    const supabase = createSupabasePublicClient();
+    const { data: supplier } = await supabase
+      .from("suppliers")
+      .select("id")
+      .eq("slug", supplierSlug)
+      .maybeSingle();
+
+    if (supplier) {
+      await supabase.from("analytics_events").insert({
+        event_type: "click_website",
+        supplier_id: supplier.id,
+        source_page: request.nextUrl.searchParams.get("source") ?? "supplier_page",
+      });
+    }
+  }
+
+  return NextResponse.redirect(to);
+}
+```
+
+No change needed to the supplier page's existing website `<a href="/api/redirect?to=...&supplier=...">` — it already pointed here, the route just didn't exist yet.
 
 - [ ] **Step 1: Write the tracking helper**
 
@@ -2594,9 +2635,9 @@ Read `components/search-bar.tsx` in full. Find its submit handler (the function 
 
 Read `components/promo-code-button.tsx` in full. In its copy-to-clipboard click handler, add `trackEvent({ eventType: "copy_promo" });` right after the clipboard write succeeds.
 
-- [ ] **Step 4: Wire website/Telegram/phone clicks on the supplier page**
+- [ ] **Step 4: Wire Telegram/phone clicks on the supplier page**
 
-Read `app/supplier/[slug]/page.tsx`'s website/Telegram/phone links. Since these are plain anchor tags in what's likely a Server Component, and `trackEvent` needs a browser client, this requires either converting just those buttons to small Client Components or adding an `onClick` via a thin client wrapper. Add a small Client Component `components/tracked-link.tsx`:
+Read `app/supplier/[slug]/page.tsx`'s Telegram/phone links (the website link is untouched here — its click tracking is handled entirely server-side by `app/api/redirect/route.ts`, Step 0 below). Since these are plain anchor tags in a Server Component, and `trackEvent` needs a browser client, this requires either converting just those buttons to small Client Components or adding an `onClick` via a thin client wrapper. Add a small Client Component `components/tracked-link.tsx`:
 
 ```typescript
 "use client";
@@ -2628,7 +2669,7 @@ export function TrackedLink({
 }
 ```
 
-Replace the three existing plain `<a>` tags on the supplier page with `<TrackedLink href={...} eventType="click_website"|"click_telegram"|"click_phone" className={...}>` keeping their exact existing `className` and children content — read the current markup first so the visual output doesn't change, only the tag name and the added tracking.
+Replace the two existing plain `<a>` tags (Telegram, phone) on the supplier page with `<TrackedLink href={...} eventType="click_telegram"|"click_phone" className={...}>` keeping their exact existing `className` and children content — read the current markup first so the visual output doesn't change, only the tag name and the added tracking. Leave the website `<a>` as a plain link — Step 0 already tracks it server-side.
 
 - [ ] **Step 5: Build and verify**
 
