@@ -1,10 +1,10 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getSuppliers, getCategories, getCities } from "@/lib/data/suppliers";
 import { SearchBar } from "@/components/search-bar";
 import { SupplierCard } from "@/components/supplier-card";
 import { FilterPanel } from "@/components/filter-panel";
 import { SortDropdown } from "@/components/sort-dropdown";
+import { AddSupplierSection } from "@/components/add-supplier-section";
 import type { SupplierFilters } from "@/lib/data/types";
 
 export const metadata: Metadata = {
@@ -56,16 +56,12 @@ export default async function SuppliersPage({
             <SortDropdown />
           </div>
 
+          <AddSupplierSection categories={categories} cities={cities} />
+
           {suppliers.length === 0 ? (
             <div className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-8 text-center">
               <p className="mb-2 font-medium">Ничего не найдено</p>
-              <p className="text-sm text-[var(--color-ink-soft)]">
-                Не нашли поставщика?{" "}
-                <Link href="/#become-supplier" className="text-[var(--color-accent)]">
-                  Добавьте его
-                </Link>
-                .
-              </p>
+              <p className="text-sm text-[var(--color-ink-soft)]">Попробуйте изменить фильтры.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
