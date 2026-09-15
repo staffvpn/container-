@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { searchSuppliers } from "@/lib/data/suppliers";
 import type { SearchResult } from "@/lib/data/types";
+import { trackEvent } from "@/lib/analytics/track-event";
 
 const emptyResult: SearchResult = { companies: [], categories: [], cities: [] };
 
@@ -54,6 +55,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
 
   function submit(query: string) {
     setOpen(false);
+    trackEvent({ eventType: "search", queryText: query, sourcePage: "home" });
     router.push(`/suppliers?q=${encodeURIComponent(query)}`);
   }
 

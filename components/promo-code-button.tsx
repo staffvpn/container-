@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackEvent } from "@/lib/analytics/track-event";
 
 export function PromoCodeButton({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
@@ -8,6 +9,7 @@ export function PromoCodeButton({ code }: { code: string }) {
   async function handleCopy() {
     await navigator.clipboard.writeText(code);
     setCopied(true);
+    trackEvent({ eventType: "copy_promo" });
     setTimeout(() => setCopied(false), 2000);
   }
 

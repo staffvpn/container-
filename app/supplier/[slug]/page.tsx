@@ -6,6 +6,7 @@ import { ShareButton } from "@/components/share-button";
 import { ReviewsList } from "@/components/reviews-list";
 import { ReviewForm } from "@/components/review-form";
 import { ErrorReportButton } from "@/components/error-report-button";
+import { TrackedLink } from "@/components/tracked-link";
 
 const statusLabel: Record<string, string | null> = {
   unverified: null,
@@ -72,20 +73,22 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
             </a>
           )}
           {supplier.contacts.phone && (
-            <a
+            <TrackedLink
               href={`tel:${supplier.contacts.phone}`}
+              eventType="click_phone"
               className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
             >
               Позвонить
-            </a>
+            </TrackedLink>
           )}
           {supplier.contacts.telegram && (
-            <a
+            <TrackedLink
               href={supplier.contacts.telegram}
+              eventType="click_telegram"
               className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
             >
               Telegram
-            </a>
+            </TrackedLink>
           )}
           <ShareButton title={supplier.name} url={`https://gryadka.example/supplier/${supplier.slug}`} />
         </div>
