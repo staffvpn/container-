@@ -39,6 +39,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         >
           Поставщики
         </Link>
+        <Link
+          href="/admin/audit"
+          className="rounded-[var(--radius-sm)] px-3 py-2 text-sm hover:bg-[var(--color-panel)]"
+        >
+          Журнал действий
+        </Link>
+        <Link
+          href="/admin/admins"
+          className="rounded-[var(--radius-sm)] px-3 py-2 text-sm hover:bg-[var(--color-panel)]"
+        >
+          Администраторы
+        </Link>
       </aside>
       <div className="flex-1 overflow-x-auto p-6">{children}</div>
     </div>
