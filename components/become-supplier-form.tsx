@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { Category, City } from "@/lib/data/types";
+import { TextField } from "./text-field";
 
 const fields = [
   "companyName",
@@ -38,13 +39,14 @@ const requiredFields: FieldName[] = ["companyName", "contactName", "phone", "ema
 export function BecomeSupplierForm({ categories, cities }: { categories: Category[]; cities: City[] }) {
   const [form, setForm] = useState<FormState>(initialState);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const missing = requiredFields.filter((field) => !form[field].trim());
     if (missing.length > 0 || form.categorySlugs.length === 0) {
@@ -52,6 +54,22 @@ export function BecomeSupplierForm({ categories, cities }: { categories: Categor
       return;
     }
     setError(null);
+    setSubmitting(true);
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/submit-application`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      },
+    );
+
+    setSubmitting(false);
+    if (!response.ok) {
+      setError("Не удалось отправить заявку. Попробуйте еще раз.");
+      return;
+    }
     setSubmitted(true);
   }
 
@@ -126,42 +144,12 @@ export function BecomeSupplierForm({ categories, cities }: { categories: Categor
 
       <button
         type="submit"
+        disabled={submitting}
         className="mt-2 self-start rounded-full bg-[var(--color-ink)] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90"
       >
-        Отправить заявку
+        {submitting ? "Отправка..." : "Отправить заявку"}
       </button>
     </form>
   );
 }
 
-function TextField({
-  label,
-  value,
-  onChange,
-  multiline,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  multiline?: boolean;
-}) {
-  return (
-    <label className="flex flex-col gap-1 text-sm">
-      {label}
-      {multiline ? (
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] bg-[var(--color-paper)] px-3 py-2"
-          rows={3}
-        />
-      ) : (
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-line)] bg-[var(--color-paper)] px-3 py-2"
-        />
-      )}
-    </label>
-  );
-}
