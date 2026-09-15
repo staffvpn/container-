@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getSupplierBySlug, getOffers, getCities, getCategories, getReviews } from "@/lib/data/suppliers";
+import { getSupplierBySlug, getOffers, getCities, getCategories, getReviews, getSupplierAddresses } from "@/lib/data/suppliers";
 import { SupplierLogo } from "@/components/supplier-logo";
 import { ShareButton } from "@/components/share-button";
 import { ReviewsList } from "@/components/reviews-list";
@@ -35,11 +35,12 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
   const supplier = await getSupplierBySlug(slug);
   if (!supplier) notFound();
 
-  const [cities, categories, supplierOffers, reviews] = await Promise.all([
+  const [cities, categories, supplierOffers, reviews, addresses] = await Promise.all([
     getCities(),
     getCategories(),
     getOffers(supplier.slug),
     getReviews(supplier.slug),
+    getSupplierAddresses(supplier.slug),
   ]);
 
   const cityName = cities.find((c) => c.slug === supplier.city)?.name ?? supplier.city;
@@ -136,6 +137,44 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           )}
         </dl>
       </section>
+
+      {addresses.length > 0 && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold">Адреса и точки</h2>
+          <div className="flex flex-col gap-3">
+            {addresses.map((addr) => (
+              <div key={addr.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  {addr.label && (
+                    <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-0.5 text-xs">{addr.label}</span>
+                  )}
+                  {addr.isPrimary && (
+                    <span className="rounded-full bg-[var(--color-accent-soft)] px-2.5 py-0.5 text-xs text-[var(--color-accent)]">
+                      Основной адрес
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 font-medium">
+                  {addr.address}
+                  {addr.cityName && `, ${addr.cityName}`}
+                </p>
+                {addr.workingHours && (
+                  <p className="text-sm text-[var(--color-ink-soft)]">Часы работы: {addr.workingHours}</p>
+                )}
+                {addr.pickupAvailable && <p className="text-sm text-[var(--color-accent)]">Самовывоз доступен</p>}
+                {addr.hasMapLocation && (
+                  <a
+                    href={addr.citySlug ? `/map?city=${addr.citySlug}` : "/map?all=1"}
+                    className="mt-2 inline-block text-sm font-medium text-[var(--color-accent)] underline"
+                  >
+                    Показать на карте
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {supplierOffers.length > 0 && (
         <section className="flex flex-col gap-3">

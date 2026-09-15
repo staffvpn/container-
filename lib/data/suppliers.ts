@@ -1,5 +1,6 @@
 import { createSupabasePublicClient } from "@/lib/supabase/public";
-import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult, Review } from "./types";
+import { supplierLocation } from "./geo";
+import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult, Review, SupplierMapPoint, SupplierAddress } from "./types";
 
 type SupplierRow = {
   slug: string;
@@ -295,5 +296,108 @@ export async function getReviews(supplierSlug: string): Promise<Review[]> {
     serviceRating: row.service_rating ?? undefined,
     comment: row.comment,
     createdAt: row.created_at,
+  }));
+}
+
+type SupplierAddressRow = {
+  id: string;
+  label: string | null;
+  address: string;
+  lat: number;
+  lng: number;
+  is_primary: boolean;
+  geocoding_status: string;
+};
+
+type SupplierWithAddressesRow = {
+  slug: string;
+  name: string;
+  rating: number;
+  city_id: string;
+  cities: { slug: string };
+  supplier_addresses: SupplierAddressRow[];
+};
+
+export async function getSupplierMapPoints(filters: SupplierFilters = {}): Promise<SupplierMapPoint[]> {
+  const [suppliers, cities] = await Promise.all([getSuppliers(filters), getCities()]);
+  const supabase = createSupabasePublicClient();
+
+  const { data, error } = await supabase
+    .from("suppliers")
+    .select("slug, name, rating, city_id, cities!city_id(slug), supplier_addresses(id, label, address, lat, lng, is_primary, geocoding_status)")
+    .eq("status", "published")
+    .in("slug", suppliers.map((s) => s.slug))
+    .returns<SupplierWithAddressesRow[]>();
+  if (error) throw error;
+
+  const points: SupplierMapPoint[] = [];
+  for (const row of data) {
+    const validAddresses = row.supplier_addresses.filter((a) => a.geocoding_status !== "failed");
+    if (validAddresses.length === 0) {
+      const supplier = suppliers.find((s) => s.slug === row.slug);
+      const fallback = supplier ? supplierLocation(supplier, cities) : null;
+      if (fallback) {
+        points.push({
+          supplierSlug: row.slug,
+          supplierName: row.name,
+          rating: row.rating,
+          addressId: null,
+          label: null,
+          address: null,
+          isPrimary: true,
+          lat: fallback.lat,
+          lng: fallback.lng,
+        });
+      }
+      continue;
+    }
+    for (const a of validAddresses) {
+      points.push({
+        supplierSlug: row.slug,
+        supplierName: row.name,
+        rating: row.rating,
+        addressId: a.id,
+        label: a.label,
+        address: a.address,
+        isPrimary: a.is_primary,
+        lat: a.lat,
+        lng: a.lng,
+      });
+    }
+  }
+  return points;
+}
+
+type PublicAddressRow = {
+  id: string;
+  label: string | null;
+  address: string;
+  working_hours: string | null;
+  pickup_available: boolean;
+  is_primary: boolean;
+  geocoding_status: string;
+  cities: { slug: string; name: string } | null;
+};
+
+export async function getSupplierAddresses(supplierSlug: string): Promise<SupplierAddress[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("supplier_addresses")
+    .select("id, label, address, working_hours, pickup_available, is_primary, geocoding_status, cities(slug, name), suppliers!inner(slug)")
+    .eq("suppliers.slug", supplierSlug)
+    .order("is_primary", { ascending: false })
+    .returns<PublicAddressRow[]>();
+  if (error) throw error;
+
+  return data.map((row) => ({
+    id: row.id,
+    label: row.label,
+    address: row.address,
+    cityName: row.cities?.name ?? null,
+    citySlug: row.cities?.slug ?? null,
+    workingHours: row.working_hours,
+    pickupAvailable: row.pickup_available,
+    isPrimary: row.is_primary,
+    hasMapLocation: row.geocoding_status !== "failed",
   }));
 }

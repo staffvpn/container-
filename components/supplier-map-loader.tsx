@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { Supplier, City } from "@/lib/data/types";
+import type { SupplierMapPoint } from "@/lib/data/types";
 
 const SupplierMap = dynamic(() => import("./supplier-map").then((m) => m.SupplierMap), {
   ssr: false,
@@ -13,8 +13,7 @@ const SupplierMap = dynamic(() => import("./supplier-map").then((m) => m.Supplie
 });
 
 export function SupplierMapLoader(props: {
-  suppliers: Supplier[];
-  cities: City[];
+  points: SupplierMapPoint[];
   focusCenter: [number, number] | null;
 }) {
   return <SupplierMap {...props} />;

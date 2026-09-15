@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSuppliers, getCities, getCategories } from "@/lib/data/suppliers";
+import { getSuppliers, getCities, getCategories, getSupplierMapPoints } from "@/lib/data/suppliers";
 import { MapFilterBar } from "@/components/map-filter-bar";
 import { MapSupplierRow } from "@/components/map-supplier-row";
 import { SupplierMapLoader } from "@/components/supplier-map-loader";
@@ -42,7 +42,11 @@ export default async function MapPage({
     confirmedOnly: readParam(params, "confirmed") === "1",
   };
 
-  const [suppliers, categories] = await Promise.all([getSuppliers(filters), getCategories()]);
+  const [suppliers, categories, mapPoints] = await Promise.all([
+    getSuppliers(filters),
+    getCategories(),
+    getSupplierMapPoints(filters),
+  ]);
   const focusCity = citySlug ? cities.find((c) => c.slug === citySlug) : undefined;
   const focusCenter: [number, number] | null = focusCity ? [focusCity.lat, focusCity.lng] : null;
 
@@ -75,7 +79,7 @@ export default async function MapPage({
       </aside>
 
       <div className="h-[400px] flex-1 md:h-full">
-        <SupplierMapLoader suppliers={suppliers} cities={cities} focusCenter={focusCenter} />
+        <SupplierMapLoader points={mapPoints} focusCenter={focusCenter} />
       </div>
     </main>
   );

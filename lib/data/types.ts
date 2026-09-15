@@ -73,6 +73,30 @@ export interface SearchResult {
   cities: City[];
 }
 
+export interface SupplierAddress {
+  id: string;
+  label: string | null;
+  address: string;
+  cityName: string | null;
+  citySlug: string | null;
+  workingHours: string | null;
+  pickupAvailable: boolean;
+  isPrimary: boolean;
+  hasMapLocation: boolean;
+}
+
+export interface SupplierMapPoint {
+  supplierSlug: string;
+  supplierName: string;
+  rating: number;
+  addressId: string | null;
+  label: string | null;
+  address: string | null;
+  isPrimary: boolean;
+  lat: number;
+  lng: number;
+}
+
 export interface Review {
   id: string;
   authorName: string;

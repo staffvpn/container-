@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import { MapLibreMap, NavigationControl, Marker, Popup, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { Supplier, City } from "@/lib/data/types";
-import { supplierLocation } from "@/lib/data/geo";
+import type { SupplierMapPoint } from "@/lib/data/types";
 
 // MapLibre GL v6 ships as pure ESM and does not auto-bundle its Web
 // Worker — without this, vector tiles are fetched but never parsed: the
@@ -15,12 +14,10 @@ import { supplierLocation } from "@/lib/data/geo";
 setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 export function SupplierMap({
-  suppliers,
-  cities,
+  points,
   focusCenter,
 }: {
-  suppliers: Supplier[];
-  cities: City[];
+  points: SupplierMapPoint[];
   focusCenter: [number, number] | null;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -124,27 +121,30 @@ export function SupplierMap({
     for (const marker of markersRef.current) marker.remove();
     markersRef.current = [];
 
-    const points = suppliers
-      .map((supplier) => ({ supplier, location: supplierLocation(supplier, cities) }))
-      .filter((p): p is { supplier: Supplier; location: { lat: number; lng: number } } =>
-        Boolean(p.location),
-      );
-
-    for (const { supplier, location } of points) {
+    for (const point of points) {
+      const addressLine = point.address
+        ? `<p style="font-size:13px;color:#6b6f68;margin:4px 0 0;">${escapeHtml(
+            [point.label, point.address].filter(Boolean).join(" · "),
+          )}</p>`
+        : "";
       const popupHtml = `
         <div style="min-width:200px;display:flex;flex-direction:column;gap:4px;">
-          <p style="font-weight:600;margin:0;">${escapeHtml(supplier.name)}</p>
-          <p style="font-size:13px;color:#6b6f68;margin:0;">★ ${supplier.rating.toFixed(1)}</p>
-          <a href="/supplier/${supplier.slug}" style="margin-top:4px;font-size:13px;font-weight:500;color:#3c673a;text-decoration:underline;">Открыть</a>
+          <p style="font-weight:600;margin:0;">${escapeHtml(point.supplierName)}</p>
+          <p style="font-size:13px;color:#6b6f68;margin:0;">★ ${point.rating.toFixed(1)}</p>
+          ${addressLine}
+          <a href="/supplier/${point.supplierSlug}" style="margin-top:4px;font-size:13px;font-weight:500;color:#3c673a;text-decoration:underline;">Открыть профиль</a>
         </div>
       `;
-      const marker = new Marker({ color: "#3c673a" })
-        .setLngLat([location.lng, location.lat])
+      // Primary addresses (or the single fallback point for suppliers with
+      // no real address on file) get the solid brand-green pin; secondary
+      // addresses of the same supplier get a lighter, visually distinct pin.
+      const marker = new Marker({ color: point.isPrimary ? "#3c673a" : "#8fae8d" })
+        .setLngLat([point.lng, point.lat])
         .setPopup(new Popup({ offset: 24 }).setHTML(popupHtml))
         .addTo(map);
       markersRef.current.push(marker);
     }
-  }, [suppliers, cities]);
+  }, [points]);
 
   useEffect(() => {
     const map = mapRef.current;
