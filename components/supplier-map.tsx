@@ -51,6 +51,32 @@ export function SupplierMap({
       if (map.getLayer("building")) {
         map.setLayerZoomRange("building", 13, 24);
       }
+
+      // The "liberty" style ships the housenumber source-layer in its
+      // vector tiles but never renders it — add it ourselves, visible
+      // only once you're zoomed in close enough for individual
+      // buildings to make sense (below that it'd just be visual noise).
+      if (!map.getLayer("housenumber-label")) {
+        map.addLayer({
+          id: "housenumber-label",
+          type: "symbol",
+          source: "openmaptiles",
+          "source-layer": "housenumber",
+          minzoom: 17,
+          layout: {
+            "text-field": ["get", "housenumber"],
+            "text-font": ["Noto Sans Regular"],
+            "text-size": 10,
+            "text-allow-overlap": true,
+            "text-ignore-placement": true,
+          },
+          paint: {
+            "text-color": "#6b6f68",
+            "text-halo-color": "#ffffff",
+            "text-halo-width": 1.2,
+          },
+        });
+      }
     });
 
     // MapLibre measures its container once at construction. In a flex
