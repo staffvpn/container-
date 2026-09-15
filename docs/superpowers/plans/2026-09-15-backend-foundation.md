@@ -495,13 +495,15 @@ $$;
 revoke all on function public.recalculate_supplier_rating() from public, anon, authenticated;
 
 create trigger on_review_status_change
-  after insert or update of status on public.reviews
+  after insert or update of status or delete on public.reviews
   for each row execute function public.recalculate_supplier_rating();
 ```
 
-No `INSERT` policy exists for `anon`/`authenticated` — the `submit-review` Edge Function (Task 14) writes via service role.
+No `INSERT` policy exists for `anon`/`authenticated` — the `submit-review` Edge Function (Task 14) writes via service role. The trigger fires `or delete` too, not just insert/update — a review can be deleted (test cleanup, or a future admin hard-delete), and without the delete case the supplier's `rating`/`review_count` would go stale forever after that row disappears. `coalesce(new.supplier_id, old.supplier_id)` inside the function handles all three trigger operations safely (`NEW` is unset on `DELETE`, `OLD` is unset on `INSERT` — `coalesce` picks whichever one the current operation actually populated).
 
-- [ ] **Step 2: Verify the trigger fires**
+- [ ] **Step 2: Verify the trigger fires — on a throwaway supplier, not a seeded one**
+
+The seeded suppliers (Task 2) carry realistic-looking `rating`/`review_count` values as fixture display data, with **no actual rows in `reviews` backing them** — the trigger recalculates strictly from `reviews`, so firing it even once for a seeded supplier overwrites its fixture numbers with the real (initially zero) aggregate, permanently. Verify against a disposable supplier row created and dropped in the same block, never against `rostery-nord` or any other seeded slug:
 
 `mcp__supabase__execute_sql`, `project_id: "dojevarrfczgmyxzpfbx"`:
 
@@ -510,24 +512,36 @@ do $$
 declare
   test_supplier_id uuid;
   test_user_id uuid;
+  test_city_id uuid;
 begin
-  select id into test_supplier_id from public.suppliers where slug = 'rostery-nord';
+  select id into test_city_id from public.cities where slug = 'moscow';
+
+  insert into public.suppliers (slug, name, short_description, about, city_id, status)
+  values ('test-rating-trigger', 'Test', 'test', 'test', test_city_id, 'published')
+  returning id into test_supplier_id;
+
   insert into auth.users (id, email) values (gen_random_uuid(), 'test-review@example.com') returning id into test_user_id;
 
   insert into public.reviews (supplier_id, user_id, overall_rating, comment, status)
   values (test_supplier_id, test_user_id, 5, 'test', 'published');
 
   assert (select review_count from public.suppliers where id = test_supplier_id) = 1,
-    'review_count did not update';
+    'review_count did not update on insert';
   assert (select rating from public.suppliers where id = test_supplier_id) = 5.0,
-    'rating did not update';
+    'rating did not update on insert';
+
+  delete from public.reviews where supplier_id = test_supplier_id;
+
+  assert (select review_count from public.suppliers where id = test_supplier_id) = 0,
+    'review_count did not reset on delete';
 
   delete from auth.users where id = test_user_id;
+  delete from public.suppliers where id = test_supplier_id;
   raise notice 'rating trigger verified OK';
 end $$;
 ```
 
-Expect a `NOTICE: rating trigger verified OK` with no assertion failure. The `delete from auth.users` cascades to `profiles` and `reviews`, cleaning up the test row.
+Expect a `NOTICE: rating trigger verified OK` with no assertion failure. Everything created in this block (`test-rating-trigger` supplier, the test auth user, the review) is deleted before the block ends — nothing seeded is touched.
 
 - [ ] **Step 3: Commit**
 
