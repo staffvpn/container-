@@ -1,10 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MapLibreMap, NavigationControl, Marker, Popup } from "maplibre-gl";
+import { MapLibreMap, NavigationControl, Marker, Popup, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Supplier, City } from "@/lib/data/types";
 import { supplierLocation } from "@/lib/data/geo";
+
+// MapLibre GL v6 ships as pure ESM and does not auto-bundle its Web
+// Worker — without this, vector tiles are fetched but never parsed: the
+// background layer and markers (plain DOM, not worker-dependent) render
+// fine, giving the illusion of a working map with an empty canvas. The
+// worker file (+ its sibling maplibre-gl-shared.mjs) is copied into
+// public/maplibre/ verbatim from node_modules/maplibre-gl/dist/.
+setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 export function SupplierMap({
   suppliers,
