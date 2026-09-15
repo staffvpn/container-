@@ -21,7 +21,7 @@ export default async function ProfilePage() {
           Войдите через Telegram, чтобы оставлять отзывы, добавлять поставщиков и следить за
           своими заявками.
         </p>
-        <TelegramLoginButton botUsername="TODO_SET_AFTER_BOTFATHER" />
+        <TelegramLoginButton botId="8765193467" />
       </main>
     );
   }
