@@ -1,5 +1,5 @@
 import { createSupabasePublicClient } from "@/lib/supabase/public";
-import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult } from "./types";
+import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult, Review } from "./types";
 
 type SupplierRow = {
   slug: string;
@@ -259,4 +259,41 @@ export async function searchSuppliers(query: string): Promise<SearchResult> {
     categories: categoryMatches ?? [],
     cities: cityMatches ?? [],
   };
+}
+
+type ReviewRow = {
+  id: string;
+  overall_rating: number;
+  price_rating: number | null;
+  quality_rating: number | null;
+  delivery_rating: number | null;
+  service_rating: number | null;
+  comment: string;
+  created_at: string;
+  profiles: { display_name: string | null } | null;
+  suppliers: { slug: string };
+};
+
+export async function getReviews(supplierSlug: string): Promise<Review[]> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, overall_rating, price_rating, quality_rating, delivery_rating, service_rating, comment, created_at, profiles(display_name), suppliers!inner(slug)")
+    .eq("suppliers.slug", supplierSlug)
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .returns<ReviewRow[]>();
+  if (error) throw error;
+
+  return data.map((row) => ({
+    id: row.id,
+    authorName: row.profiles?.display_name || "Пользователь",
+    overallRating: row.overall_rating,
+    priceRating: row.price_rating ?? undefined,
+    qualityRating: row.quality_rating ?? undefined,
+    deliveryRating: row.delivery_rating ?? undefined,
+    serviceRating: row.service_rating ?? undefined,
+    comment: row.comment,
+    createdAt: row.created_at,
+  }));
 }

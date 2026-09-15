@@ -72,3 +72,15 @@ export interface SearchResult {
   categories: Category[];
   cities: City[];
 }
+
+export interface Review {
+  id: string;
+  authorName: string;
+  overallRating: number;
+  priceRating?: number;
+  qualityRating?: number;
+  deliveryRating?: number;
+  serviceRating?: number;
+  comment: string;
+  createdAt: string;
+}

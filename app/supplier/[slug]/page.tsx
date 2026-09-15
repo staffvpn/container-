@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getSupplierBySlug } from "@/lib/data/suppliers";
-import { offers } from "@/lib/data/fixtures/offers";
-import { cities } from "@/lib/data/fixtures/cities";
-import { categories } from "@/lib/data/fixtures/categories";
+import { getSupplierBySlug, getOffers, getCities, getCategories, getReviews } from "@/lib/data/suppliers";
 import { SupplierLogo } from "@/components/supplier-logo";
 import { ShareButton } from "@/components/share-button";
+import { ReviewsList } from "@/components/reviews-list";
+import { ReviewForm } from "@/components/review-form";
 
 const statusLabel: Record<string, string | null> = {
   unverified: null,
@@ -34,11 +33,17 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
   const supplier = await getSupplierBySlug(slug);
   if (!supplier) notFound();
 
+  const [cities, categories, supplierOffers, reviews] = await Promise.all([
+    getCities(),
+    getCategories(),
+    getOffers(supplier.slug),
+    getReviews(supplier.slug),
+  ]);
+
   const cityName = cities.find((c) => c.slug === supplier.city)?.name ?? supplier.city;
   const categoryList = supplier.categories
     .map((catSlug) => categories.find((c) => c.slug === catSlug))
     .filter((c): c is NonNullable<typeof c> => Boolean(c));
-  const supplierOffers = offers.filter((o) => o.supplierSlug === supplier.slug);
   const status = statusLabel[supplier.status];
 
   return (
@@ -140,6 +145,15 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           </div>
         </section>
       )}
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">Отзывы</h2>
+        <ReviewsList reviews={reviews} />
+        <div className="mt-4 max-w-lg">
+          <h3 className="mb-3 font-medium">Оставить отзыв</h3>
+          <ReviewForm supplierSlug={supplier.slug} />
+        </div>
+      </section>
     </main>
   );
 }
