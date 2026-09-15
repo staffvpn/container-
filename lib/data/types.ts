@@ -3,6 +3,8 @@ export type SupplierStatus = "unverified" | "confirmed" | "verified";
 export interface City {
   slug: string;
   name: string;
+  lat: number;
+  lng: number;
 }
 
 export interface Category {
@@ -52,6 +54,7 @@ export interface Offer {
   city?: string;
   category?: string;
   expiresAt?: string;
+  promoCode?: string;
 }
 
 export interface SupplierFilters {
