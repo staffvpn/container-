@@ -5,6 +5,7 @@ import { SupplierLogo } from "@/components/supplier-logo";
 import { ShareButton } from "@/components/share-button";
 import { ReviewsList } from "@/components/reviews-list";
 import { ReviewForm } from "@/components/review-form";
+import { ErrorReportButton } from "@/components/error-report-button";
 
 const statusLabel: Record<string, string | null> = {
   unverified: null,
@@ -88,6 +89,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
           )}
           <ShareButton title={supplier.name} url={`https://gryadka.example/supplier/${supplier.slug}`} />
         </div>
+        <ErrorReportButton supplierSlug={supplier.slug} />
       </section>
 
       <section className="flex flex-col gap-3">
