@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { getSuppliers } from "@/lib/data/suppliers";
-import { cities } from "@/lib/data/fixtures/cities";
+import { getSuppliers, getCities } from "@/lib/data/suppliers";
 import { MapFilterBar } from "@/components/map-filter-bar";
 import { MapSupplierRow } from "@/components/map-supplier-row";
 import { SupplierMapLoader } from "@/components/supplier-map-loader";
+import { CityGate } from "@/components/city-gate";
 import type { SupplierFilters } from "@/lib/data/types";
 
 export const metadata: Metadata = {
@@ -25,6 +25,17 @@ export default async function MapPage({
 }) {
   const params = await searchParams;
   const citySlug = readParam(params, "city");
+  const showAll = readParam(params, "all") === "1";
+  const cities = await getCities();
+
+  if (!citySlug && !showAll) {
+    return (
+      <main className="h-[calc(100dvh-73px)]">
+        <CityGate cities={cities} />
+      </main>
+    );
+  }
+
   const filters: SupplierFilters = {
     city: citySlug,
     category: readParam(params, "category"),
