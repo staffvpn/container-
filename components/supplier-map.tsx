@@ -41,6 +41,16 @@ export function SupplierMap({
     map.on("load", () => {
       map.setProjection({ type: "globe" });
       map.resize();
+
+      // The "liberty" style renders buildings as flat fills up to z14,
+      // then switches to 3D extrusions above that — drop the 3D layer
+      // and let the flat one keep covering every zoom past 14 instead.
+      if (map.getLayer("building-3d")) {
+        map.removeLayer("building-3d");
+      }
+      if (map.getLayer("building")) {
+        map.setLayerZoomRange("building", 13, 24);
+      }
     });
 
     // MapLibre measures its container once at construction. In a flex
