@@ -224,11 +224,17 @@ client-side data-fetching path.
 jittered city-center point (`lib/data/geo.ts`) only for suppliers with no
 address on file.
 
-**Analytics capture points:** search submissions, supplier card/profile
-opens, category chip clicks, offer views, website/Telegram/phone clicks,
-promo-code copy, successful login, and every form submission above — each
-fires a `track-event` insert (direct `analytics_events` insert per the RLS
-exception, not an Edge Function call).
+**Analytics capture points, this pass:** search submissions,
+website/Telegram/phone clicks, and promo-code copy — each fires a direct
+`analytics_events` insert per the RLS exception, not an Edge Function call.
+These are the highest-signal conversion events the brief calls out
+repeatedly (§14, §16, §34) and the ones a client-side fire-and-forget insert
+covers cleanly. View-only events (supplier/category/offer page opens) and
+write-confirmation events (successful login, every form submission) are
+schema-ready (`analytics_events.event_type` accepts all of them) but not
+wired to a UI trigger in this pass — there's no admin dashboard yet to
+consume them (sub-project 4), so instrumenting every page view now would be
+effort spent before there's a reader for the data.
 
 ## Testing
 
