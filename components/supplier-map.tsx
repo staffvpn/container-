@@ -32,10 +32,22 @@ export function SupplierMap({
     map.addControl(new NavigationControl(), "top-right");
     map.on("load", () => {
       map.setProjection({ type: "globe" });
+      map.resize();
     });
+
+    // MapLibre measures its container once at construction. In a flex
+    // layout the container can still be mid-reflow at that instant (0
+    // height, or the wrong height before the sidebar/fonts settle) — the
+    // canvas then renders at the wrong size and no tiles ever appear,
+    // while markers (plain positioned DOM elements, not canvas-drawn)
+    // still show up fine. A ResizeObserver keeps the canvas in sync with
+    // whatever size the container actually ends up at.
+    const resizeObserver = new ResizeObserver(() => map.resize());
+    resizeObserver.observe(containerRef.current);
 
     mapRef.current = map;
     return () => {
+      resizeObserver.disconnect();
       map.remove();
       mapRef.current = null;
     };
