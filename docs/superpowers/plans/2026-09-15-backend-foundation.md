@@ -39,7 +39,35 @@ drop schema if exists public cascade;
 create schema public;
 grant usage on schema public to postgres, anon, authenticated, service_role;
 grant all on schema public to postgres, service_role;
+
+grant select, insert, update, delete on all tables in schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to anon, authenticated, service_role;
+
+alter default privileges for role postgres in schema public
+  grant select, insert, update, delete on tables to anon, authenticated;
+alter default privileges for role postgres in schema public
+  grant select, insert, update, delete on tables to service_role;
+alter default privileges for role postgres in schema public
+  grant usage, select on sequences to anon, authenticated, service_role;
 ```
+
+**This second block matters — don't skip it.** Supabase projects normally
+ship with default privileges already configured so that any new table
+automatically grants base `SELECT`/`INSERT`/`UPDATE`/`DELETE` to
+`anon`/`authenticated` (RLS then narrows what's actually visible on top of
+that). Those default-privilege entries are keyed to the schema's object
+identity, not just its name — `drop schema ... cascade` removes them, and
+the freshly `create schema public` right after does **not** get them back.
+Without this block, every table created afterward is unreadable/unwritable
+by `anon`/`authenticated` even with a permissive RLS policy, failing with a
+hard `permission denied for table ...` (a real bug hit and fixed live while
+executing this plan — `select count(*) from public.cities` as `anon`
+errored instead of returning `6`, on a table with an explicit
+`for select using (true)` policy). Run this block once here, immediately
+after recreating the schema and before Step 2 creates the first table — it
+covers every table this plan creates afterward via
+`alter default privileges`.
 
 - [ ] **Step 2: Apply the base schema migration**
 
@@ -648,14 +676,15 @@ set role anon;
 select count(*) from public.supplier_applications;
 ```
 
-Expect `0` rows back (not an error — `SELECT` with no matching policy returns empty under RLS), confirming no read leak. Then:
+Expect `0` rows back (not an error — `SELECT` with no matching policy returns empty under RLS), confirming no read leak. Then, **in the same `execute_sql` call** — each call is its own session, so `set role anon` from the call above does not carry over, and running the insert alone would silently execute as the default privileged role instead of testing anon at all:
 
 ```sql
+set role anon;
 insert into public.supplier_applications (company_name, contact_name, phone, email)
 values ('test', 'test', 'test', 'test');
 ```
 
-Expect an error: `new row violates row-level security policy` (or "permission denied") — confirming anon cannot insert directly. Then reset:
+Expect an error: `new row violates row-level security policy` (or "permission denied") — confirming anon cannot insert directly. If it succeeds instead, check whether `set role anon` was actually included in that same call before concluding RLS is broken. Then reset:
 
 ```sql
 reset role;
