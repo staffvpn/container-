@@ -9,9 +9,10 @@ function colorFor(name: string): string {
 const sizeClasses = {
   sm: "h-12 w-12 rounded-[var(--radius-sm)] text-sm",
   lg: "h-20 w-20 rounded-full text-2xl",
+  fill: "h-full w-full rounded-[var(--radius-sm)] text-3xl",
 };
 
-export function SupplierLogo({ name, size = "sm" }: { name: string; size?: "sm" | "lg" }) {
+export function SupplierLogo({ name, size = "sm" }: { name: string; size?: "sm" | "lg" | "fill" }) {
   const initials = name
     .split(" ")
     .slice(0, 2)
