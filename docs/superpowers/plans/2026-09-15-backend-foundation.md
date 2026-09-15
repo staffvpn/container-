@@ -1002,48 +1002,48 @@ const SUPPLIER_SELECT = `
   verification_level, website_url, telegram, phone, min_order,
   delivery_available, pickup_available, works_with_legal_entities,
   works_with_individual_entrepreneurs, deferred_payment, payment_methods, updated_at,
-  cities!inner(slug),
+  cities!city_id(slug),
   supplier_categories(categories(slug)),
   supplier_service_cities(cities(slug))
 `;
 ```
 
+The `cities!city_id(slug)` hint is required, not stylistic: `cities` is reachable from `suppliers` two ways (the direct `city_id` FK, and indirectly through `supplier_service_cities`), and PostgREST refuses to embed with `Could not embed because more than one relationship was found for 'suppliers' and 'cities'` unless the FK is named explicitly — a real error hit live while executing this plan, confirmed via a direct PostgREST query before writing this fix.
+
 `keywords` becomes `[]` — the fixture-only free-text keyword list has no database column (§26 already covered by matching name/city/category directly; Task 9 handles that). No current caller reads `supplier.keywords` outside `scoreSupplier`, which Task 9 replaces.
 
 - [ ] **Step 2: Replace `getSuppliers`**
 
-Replace the function body:
+Replace the function body. Every filter here runs on the mapped JavaScript array, not as a PostgREST query filter — this is deliberate, not a placeholder shortcut: a `.or()` filter spanning both `cities.slug` and the two-hop `supplier_service_cities.cities.slug` fails with `failed to parse logic tree` (PostgREST's embedded-filter syntax doesn't support that shape), and `.eq()` on a nested embed like `supplier_categories.categories.slug` filters rows *within* the embedded array rather than the outer `suppliers` rows unless every level of that embed also carries `!inner`, which then forces restructuring `SUPPLIER_SELECT` differently per filter combination. Given 18 suppliers today and no near-term scale concern, filtering the already-fetched, already-mapped array is simpler and exactly reproduces the original fixture-based behavior:
 
 ```typescript
 export async function getSuppliers(filters: SupplierFilters = {}): Promise<Supplier[]> {
   const supabase = createSupabasePublicClient();
-  let query = supabase
+  const { data, error } = await supabase
     .from("suppliers")
     .select(SUPPLIER_SELECT)
-    .eq("status", "published");
-
-  if (filters.city) {
-    query = query.or(
-      `cities.slug.eq.${filters.city},supplier_service_cities.cities.slug.eq.${filters.city}`,
-    );
-  }
-  if (filters.category) {
-    query = query.eq("supplier_categories.categories.slug", filters.category);
-  }
-  if (filters.delivery) {
-    query = query.eq("delivery_available", true);
-  }
-  if (filters.pickup) {
-    query = query.eq("pickup_available", true);
-  }
-  if (filters.confirmedOnly) {
-    query = query.neq("verification_level", "none");
-  }
-
-  const { data, error } = await query;
+    .eq("status", "published")
+    .returns<SupplierRow[]>();
   if (error) throw error;
+
   let result = data.map(mapSupplierRow);
 
+  if (filters.city) {
+    const city = filters.city;
+    result = result.filter((s) => s.city === city || s.regions.includes(city));
+  }
+  if (filters.category) {
+    result = result.filter((s) => s.categories.includes(filters.category!));
+  }
+  if (filters.delivery) {
+    result = result.filter((s) => s.conditions.delivery);
+  }
+  if (filters.pickup) {
+    result = result.filter((s) => s.conditions.pickup);
+  }
+  if (filters.confirmedOnly) {
+    result = result.filter((s) => s.status !== "unverified");
+  }
   if (filters.query) {
     result = await filterByQuery(result, filters.query);
   }
@@ -1066,6 +1066,8 @@ export async function getSuppliers(filters: SupplierFilters = {}): Promise<Suppl
 }
 ```
 
+The `.returns<SupplierRow[]>()` call matters for `npm run build` to type-check: without generated database types, supabase-js can't statically tell a many-to-one embed (`cities!city_id(slug)`, one object) from a many-to-many one (an array), and infers the wrong shape — `.returns<T>()` pins the actual runtime shape (verified directly against the live API above) rather than the inferred one.
+
 `filterByQuery` is defined in Task 9 (the text-search path) — this task leaves a forward reference that Task 9 resolves immediately after, since both tasks touch the same function and splitting the query-filter logic into its own task would leave `getSuppliers` referencing an undefined function in between. Do Task 9's Step 1 before running tests for this task.
 
 - [ ] **Step 3: Replace `getSupplierBySlug`**
@@ -1078,7 +1080,8 @@ export async function getSupplierBySlug(slug: string): Promise<Supplier | null> 
     .select(SUPPLIER_SELECT)
     .eq("slug", slug)
     .eq("status", "published")
-    .maybeSingle();
+    .maybeSingle()
+    .returns<SupplierRow | null>();
   if (error) throw error;
   return data ? mapSupplierRow(data) : null;
 }
@@ -1086,21 +1089,31 @@ export async function getSupplierBySlug(slug: string): Promise<Supplier | null> 
 
 - [ ] **Step 4: Replace `getOffers`**
 
-`offer.city` is read today in `components/offer-card.tsx:13` (display chip) and `app/offers/page.tsx:32` (filter). An offer has no single city column in the new schema — it belongs to a supplier, which has one home `city_id` — so `city` on the returned `Offer` becomes the supplier's home city slug, via a join, keeping the `Offer` type and both call sites unchanged:
+`offer.city` is read today in `components/offer-card.tsx:13` (display chip) and `app/offers/page.tsx:32` (filter). An offer has no single city column in the new schema — it belongs to a supplier, which has one home `city_id` — so `city` on the returned `Offer` becomes the supplier's home city slug, via a join, keeping the `Offer` type and both call sites unchanged. The nested `cities!city_id(slug)` needs the same explicit-FK hint as Step 1, for the same reason (confirmed live: without it, this query fails with the identical ambiguity error, since `offers -> suppliers -> cities` still crosses the same two-path `suppliers`/`cities` relationship):
 
 ```typescript
+type OfferRow = {
+  id: string;
+  title: string;
+  description: string;
+  expires_at: string | null;
+  categories: { slug: string } | null;
+  suppliers: { slug: string; cities: { slug: string } };
+  promo_codes: { code: string }[];
+};
+
 export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
   const supabase = createSupabasePublicClient();
   let query = supabase
     .from("offers")
-    .select("id, title, description, expires_at, categories(slug), suppliers!inner(slug, cities(slug)), promo_codes(code)")
+    .select("id, title, description, expires_at, categories(slug), suppliers!inner(slug, cities!city_id(slug)), promo_codes(code)")
     .eq("status", "published");
 
   if (supplierSlug) {
     query = query.eq("suppliers.slug", supplierSlug);
   }
 
-  const { data, error } = await query;
+  const { data, error } = await query.returns<OfferRow[]>();
   if (error) throw error;
 
   return data.map((row) => ({
@@ -1225,7 +1238,8 @@ export async function searchSuppliers(query: string): Promise<SearchResult> {
   const { data: allPublished, error } = await supabase
     .from("suppliers")
     .select(SUPPLIER_SELECT)
-    .eq("status", "published");
+    .eq("status", "published")
+    .returns<SupplierRow[]>();
   if (error) throw error;
 
   const scored = await filterByQuery(allPublished.map(mapSupplierRow), q);
