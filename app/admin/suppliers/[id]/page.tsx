@@ -6,6 +6,7 @@ import { AdminSupplierForm } from "@/components/admin/supplier-form";
 import { AddressManager } from "@/components/admin/address-manager";
 import { SupplierMembers } from "@/components/admin/supplier-members";
 import { LogoUploader } from "@/components/admin/logo-uploader";
+import { AdminSupplierActions } from "@/components/admin/supplier-actions";
 import { updateSupplier } from "@/app/admin/suppliers/actions";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -99,6 +100,10 @@ export default async function EditSupplierPage({
       </div>
       <div className="max-w-3xl">
         <LogoUploader supplierId={id} currentUrl={supplier.logo_url} />
+      </div>
+      <div className="max-w-3xl">
+        <h2 className="mb-3 text-lg font-semibold">Статус и удаление</h2>
+        <AdminSupplierActions supplierId={id} status={supplier.status} isDeleted={!!supplier.deleted_at} />
       </div>
       <AdminSupplierForm
         action={boundUpdate}
