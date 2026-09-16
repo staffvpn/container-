@@ -57,12 +57,14 @@ export function AdminSupplierForm({
   cities,
   defaults,
   submitLabel,
+  showAdminFields = true,
 }: {
   action: (state: SupplierFormState, formData: FormData) => Promise<SupplierFormState>;
   categories: AdminCategory[];
   cities: AdminCity[];
   defaults?: AdminSupplierDefaults;
   submitLabel: string;
+  showAdminFields?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   const d = defaults ?? {};
@@ -93,7 +95,7 @@ export function AdminSupplierForm({
         <Field label="Год основания">
           <input name="founded_year" type="number" defaultValue={d.founded_year ?? ""} className={inputClass} />
         </Field>
-        <Field label="Логотип / фото (URL)">
+        <Field label="Логотип / фото (URL, необязательно — можно загрузить файл выше)">
           <input name="logo_url" defaultValue={d.logo_url ?? ""} placeholder="https://..." className={inputClass} />
         </Field>
       </Section>
@@ -176,26 +178,30 @@ export function AdminSupplierForm({
         </Field>
       </Section>
 
-      <Section title="Статусы">
-        <Field label="Статус публикации">
-          <select name="status" defaultValue={d.status ?? "draft"} className={inputClass}>
-            {statusOptions.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-        </Field>
-        <Field label="Статус проверки">
-          <select name="verification_level" defaultValue={d.verification_level ?? "none"} className={inputClass}>
-            {verificationOptions.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-        </Field>
-      </Section>
+      {showAdminFields && (
+        <>
+          <Section title="Статусы">
+            <Field label="Статус публикации">
+              <select name="status" defaultValue={d.status ?? "draft"} className={inputClass}>
+                {statusOptions.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Статус проверки">
+              <select name="verification_level" defaultValue={d.verification_level ?? "none"} className={inputClass}>
+                {verificationOptions.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </Field>
+          </Section>
 
-      <Section title="Заметки администратора (не видны публично)">
-        <textarea name="admin_notes" defaultValue={d.admin_notes ?? ""} rows={3} className={inputClass} />
-      </Section>
+          <Section title="Заметки администратора (не видны публично)">
+            <textarea name="admin_notes" defaultValue={d.admin_notes ?? ""} rows={3} className={inputClass} />
+          </Section>
+        </>
+      )}
 
       <button
         type="submit"

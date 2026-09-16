@@ -21,7 +21,7 @@ export default async function ProfilePage() {
           Войдите через Telegram, чтобы оставлять отзывы, добавлять поставщиков и следить за
           своими заявками.
         </p>
-        <TelegramLoginButton botId="8765193467" />
+        <TelegramLoginButton botId="8866261929" />
       </main>
     );
   }
@@ -31,6 +31,17 @@ export default async function ProfilePage() {
     .select("display_name, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
+
+  const { count: pendingInvitations } = await supabase
+    .from("ownership_invitations")
+    .select("id", { count: "exact", head: true })
+    .eq("invited_user_id", user.id)
+    .eq("status", "pending");
+
+  const { count: myCompanies } = await supabase
+    .from("supplier_members")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
 
   return (
     <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
@@ -45,6 +56,24 @@ export default async function ProfilePage() {
         />
       )}
       <h1 className="text-2xl font-semibold">{profile?.display_name || "Профиль"}</h1>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        {!!pendingInvitations && pendingInvitations > 0 && (
+          <a
+            href="/invitations"
+            className="rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
+          >
+            Приглашения ({pendingInvitations})
+          </a>
+        )}
+        {!!myCompanies && myCompanies > 0 && (
+          <a
+            href="/my-suppliers"
+            className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
+          >
+            Мои компании
+          </a>
+        )}
+      </div>
       <LogoutButton />
     </main>
   );

@@ -3,37 +3,18 @@
 import { revalidatePath } from "next/cache";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { geocodeAddress } from "@/lib/admin/geocode";
-
-async function requireAdmin() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("not authenticated");
-
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
-  if (profile?.role !== "admin") throw new Error("not an admin");
-
-  return { supabase, userId: user.id };
-}
+import { requireSupplierAccess, logAudit as logSupplierAudit } from "@/lib/admin/supplier-access";
 
 async function logAudit(
   supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
   actorUserId: string,
+  actorRole: string,
   supplierId: string,
   action: string,
   oldValue: unknown,
   newValue: unknown,
 ) {
-  await supabase.from("audit_log").insert({
-    actor_user_id: actorUserId,
-    actor_role: "admin",
-    entity_type: "supplier_address",
-    entity_id: supplierId,
-    action,
-    old_value: oldValue ?? null,
-    new_value: newValue ?? null,
-  });
+  await logSupplierAudit(supabase, actorUserId, actorRole, "supplier_address", supplierId, action, oldValue, newValue);
 }
 
 export type AddressFormState = { error?: string; warning?: string };
@@ -43,7 +24,7 @@ export async function addAddress(
   _prev: AddressFormState,
   formData: FormData,
 ): Promise<AddressFormState> {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "editor");
 
   const address = String(formData.get("address") ?? "").trim();
   const label = String(formData.get("label") ?? "").trim() || null;
@@ -105,6 +86,7 @@ export async function addAddress(
         : `Не удалось сохранить: ${error.message}` };
     }
     revalidatePath(`/admin/suppliers/${supplierId}`);
+    revalidatePath(`/my-suppliers/${supplierId}`);
     return { warning: "Не удалось определить координаты автоматически. Адрес сохранён — укажите координаты вручную." };
   }
 
@@ -131,39 +113,43 @@ export async function addAddress(
       : `Не удалось сохранить: ${error.message}` };
   }
 
-  await logAudit(supabase, userId, supplierId, "address_added", null, { address, lat, lng });
+  await logAudit(supabase, userId, actingAs, supplierId, "address_added", null, { address, lat, lng });
   revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
   return {};
 }
 
 export async function deleteAddress(supplierId: string, addressId: string) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "editor");
   const { error } = await supabase.from("supplier_addresses").delete().eq("id", addressId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "address_deleted", { id: addressId }, null);
+  await logAudit(supabase, userId, actingAs, supplierId, "address_deleted", { id: addressId }, null);
   revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
 }
 
 export async function setPrimaryAddress(supplierId: string, addressId: string) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "editor");
 
   await supabase.from("supplier_addresses").update({ is_primary: false }).eq("supplier_id", supplierId);
   const { error } = await supabase.from("supplier_addresses").update({ is_primary: true }).eq("id", addressId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "address_set_primary", null, { id: addressId });
+  await logAudit(supabase, userId, actingAs, supplierId, "address_set_primary", null, { id: addressId });
   revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
 }
 
 export async function setManualCoordinates(supplierId: string, addressId: string, lat: number, lng: number) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "editor");
   const { error } = await supabase
     .from("supplier_addresses")
     .update({ lat, lng, geocoding_status: "manual" })
     .eq("id", addressId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "address_coordinates_set", null, { id: addressId, lat, lng });
+  await logAudit(supabase, userId, actingAs, supplierId, "address_coordinates_set", null, { id: addressId, lat, lng });
   revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
 }

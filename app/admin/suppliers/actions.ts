@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { requireSupplierAccess, logAudit as logSupplierAudit } from "@/lib/admin/supplier-access";
 
 async function requireAdmin() {
   const supabase = await createServerSupabaseClient();
@@ -24,20 +25,13 @@ async function requireAdmin() {
 async function logAudit(
   supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
   actorUserId: string,
+  actorRole: string,
   entityId: string,
   action: string,
   oldValue: unknown,
   newValue: unknown,
 ) {
-  await supabase.from("audit_log").insert({
-    actor_user_id: actorUserId,
-    actor_role: "admin",
-    entity_type: "supplier",
-    entity_id: entityId,
-    action,
-    old_value: oldValue ?? null,
-    new_value: newValue ?? null,
-  });
+  await logSupplierAudit(supabase, actorUserId, actorRole, "supplier", entityId, action, oldValue, newValue);
 }
 
 const translitMap: Record<string, string> = {
@@ -162,7 +156,7 @@ export async function createSupplier(_prev: SupplierFormState, formData: FormDat
       .insert(fields.service_city_ids.map((city_id) => ({ supplier_id: inserted.id, city_id })));
   }
 
-  await logAudit(supabase, userId, inserted.id, "created", null, fields);
+  await logAudit(supabase, userId, "admin", inserted.id, "created", null, fields);
 
   revalidatePath("/admin/suppliers");
   redirect(`/admin/suppliers/${inserted.id}`);
@@ -173,7 +167,7 @@ export async function updateSupplier(
   _prev: SupplierFormState,
   formData: FormData,
 ): Promise<SupplierFormState> {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "editor");
   const fields = parseCommon(formData);
 
   if (!fields.name || !fields.short_description || !fields.about || !fields.city_id) {
@@ -181,6 +175,9 @@ export async function updateSupplier(
   }
 
   const { data: existing } = await supabase.from("suppliers").select("*").eq("id", supplierId).single();
+
+  // Editors (content-level role) may not change publication status, verification, or internal admin notes.
+  const canManageStatus = actingAs === "platform_admin" || actingAs === "owner" || actingAs === "admin";
 
   const { error } = await supabase
     .from("suppliers")
@@ -191,15 +188,13 @@ export async function updateSupplier(
       founded_year: fields.founded_year,
       logo_url: fields.logo_url,
       city_id: fields.city_id,
-      status: fields.status,
-      verification_level: fields.verification_level,
+      ...(canManageStatus ? { status: fields.status, verification_level: fields.verification_level, admin_notes: fields.admin_notes } : {}),
       website_url: fields.website_url,
       telegram: fields.telegram,
       phone: fields.phone,
       email: fields.email,
       contact_notes: fields.contact_notes,
       terms_notes: fields.terms_notes,
-      admin_notes: fields.admin_notes,
       min_order: fields.min_order,
       delivery_available: fields.delivery_available,
       pickup_available: fields.pickup_available,
@@ -229,15 +224,16 @@ export async function updateSupplier(
       .insert(fields.service_city_ids.map((city_id) => ({ supplier_id: supplierId, city_id })));
   }
 
-  await logAudit(supabase, userId, supplierId, "updated", existing, fields);
+  await logAudit(supabase, userId, actingAs, supplierId, "updated", existing, fields);
 
   revalidatePath("/admin/suppliers");
   revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
   return {};
 }
 
 export async function setSupplierStatus(supplierId: string, status: string) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "admin");
   const { data: existing } = await supabase.from("suppliers").select("status").eq("id", supplierId).single();
 
   const { error } = await supabase
@@ -246,40 +242,41 @@ export async function setSupplierStatus(supplierId: string, status: string) {
     .eq("id", supplierId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "status_changed", { status: existing?.status }, { status });
+  await logAudit(supabase, userId, actingAs, supplierId, "status_changed", { status: existing?.status }, { status });
   revalidatePath("/admin/suppliers");
   revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
 }
 
 export async function softDeleteSupplier(supplierId: string) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "owner");
   const { error } = await supabase
     .from("suppliers")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", supplierId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "soft_deleted", null, null);
+  await logAudit(supabase, userId, actingAs, supplierId, "soft_deleted", null, null);
   revalidatePath("/admin/suppliers");
 }
 
 export async function restoreSupplier(supplierId: string) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "owner");
   const { error } = await supabase.from("suppliers").update({ deleted_at: null }).eq("id", supplierId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "restored", null, null);
+  await logAudit(supabase, userId, actingAs, supplierId, "restored", null, null);
   revalidatePath("/admin/suppliers");
 }
 
 export async function hardDeleteSupplier(supplierId: string) {
-  const { supabase, userId } = await requireAdmin();
+  const { supabase, userId, actingAs } = await requireSupplierAccess(supplierId, "owner");
   const { data: existing } = await supabase.from("suppliers").select("*").eq("id", supplierId).single();
 
   const { error } = await supabase.from("suppliers").delete().eq("id", supplierId);
   if (error) throw new Error(error.message);
 
-  await logAudit(supabase, userId, supplierId, "hard_deleted", existing, null);
+  await logAudit(supabase, userId, actingAs, supplierId, "hard_deleted", existing, null);
   revalidatePath("/admin/suppliers");
   redirect("/admin/suppliers");
 }

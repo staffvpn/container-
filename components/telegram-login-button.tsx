@@ -21,6 +21,7 @@ export function TelegramLoginButton({ botId }: { botId: string }) {
   const router = useRouter();
   const scriptLoadedRef = useRef(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (scriptLoadedRef.current) return;
@@ -32,43 +33,69 @@ export function TelegramLoginButton({ botId }: { botId: string }) {
   }, []);
 
   function handleLogin() {
-    if (!window.Telegram) return;
+    setError(null);
+
+    if (!window.Telegram) {
+      setError("Не удалось загрузить виджет Telegram. Проверьте подключение или блокировщик рекламы и попробуйте ещё раз.");
+      return;
+    }
+
     setLoading(true);
     window.Telegram.Login.auth({ bot_id: botId, request_access: true, lang: "ru" }, async (user) => {
       if (!user) {
         setLoading(false);
+        setError("Вход через Telegram не завершён. Попробуйте ещё раз.");
         return;
       }
-      const payload = Object.fromEntries(Object.entries(user).map(([k, v]) => [k, String(v)]));
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/telegram-auth`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        },
-      );
-      setLoading(false);
-      if (!response.ok) return;
 
-      const { access_token, refresh_token } = await response.json();
-      const supabase = createBrowserSupabaseClient();
-      await supabase.auth.setSession({ access_token, refresh_token });
-      router.push("/profile");
-      router.refresh();
+      try {
+        const payload = Object.fromEntries(Object.entries(user).map(([k, v]) => [k, String(v)]));
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/telegram-auth`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          },
+        );
+
+        if (!response.ok) {
+          const body = await response.json().catch(() => null);
+          setError(body?.error ? `Ошибка входа: ${body.error}` : "Не удалось войти. Попробуйте ещё раз позже.");
+          return;
+        }
+
+        const { access_token, refresh_token } = await response.json();
+        const supabase = createBrowserSupabaseClient();
+        const { error: sessionError } = await supabase.auth.setSession({ access_token, refresh_token });
+        if (sessionError) {
+          setError("Не удалось создать сессию. Попробуйте ещё раз.");
+          return;
+        }
+
+        router.push("/profile");
+        router.refresh();
+      } catch {
+        setError("Не удалось связаться с сервером. Проверьте интернет-соединение и попробуйте снова.");
+      } finally {
+        setLoading(false);
+      }
     });
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleLogin}
-      disabled={loading}
-      className="flex items-center gap-2 rounded-full bg-[#229ED9] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
-    >
-      <TelegramIcon />
-      {loading ? "Вход..." : "Войти через Telegram"}
-    </button>
+    <div className="flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={handleLogin}
+        disabled={loading}
+        className="flex items-center gap-2 rounded-full bg-[#229ED9] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
+      >
+        <TelegramIcon />
+        {loading ? "Вход..." : "Войти через Telegram"}
+      </button>
+      {error && <p className="max-w-xs text-center text-sm text-[#b3261e]">{error}</p>}
+    </div>
   );
 }
 
