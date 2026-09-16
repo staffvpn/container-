@@ -59,7 +59,12 @@ export async function inviteMember(supplierId: string, targetUserId: string, rol
     invited_user_id: targetUserId,
     role_offered: role,
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.message.includes("duplicate") || error.message.includes("unique")) {
+      throw new Error("Этому пользователю уже отправлено приглашение по этому поставщику.");
+    }
+    throw new Error(error.message);
+  }
 
   await logAudit(supabase, userId, actingAs, "ownership_invitation", supplierId, "invitation_sent", null, {
     invited_user_id: targetUserId,
