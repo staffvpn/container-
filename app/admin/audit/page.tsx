@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { formatAuditValues } from "@/lib/admin/audit-format";
 
 const actionLabels: Record<string, string> = {
   created: "Создание",
@@ -105,23 +106,33 @@ export default async function AuditLogPage({
               </p>
             </div>
             {entry.note && <p className="mt-1 text-[var(--color-ink-soft)]">{entry.note}</p>}
-            {(entry.old_value || entry.new_value) && (
-              <details className="mt-2">
-                <summary className="cursor-pointer text-xs text-[var(--color-ink-soft)]">Подробности</summary>
-                <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {entry.old_value && (
-                    <pre className="overflow-x-auto rounded-[var(--radius-sm)] bg-[var(--color-panel)] p-2 text-xs">
-                      {JSON.stringify(entry.old_value, null, 2)}
-                    </pre>
-                  )}
-                  {entry.new_value && (
-                    <pre className="overflow-x-auto rounded-[var(--radius-sm)] bg-[var(--color-panel)] p-2 text-xs">
-                      {JSON.stringify(entry.new_value, null, 2)}
-                    </pre>
-                  )}
-                </div>
-              </details>
-            )}
+            {(() => {
+              const fields = formatAuditValues(entry.old_value, entry.new_value);
+              if (fields.length === 0) return null;
+              return (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs text-[var(--color-ink-soft)]">Подробности</summary>
+                  <dl className="mt-2 flex flex-col gap-1 rounded-[var(--radius-sm)] bg-[var(--color-panel)] p-3 text-sm">
+                    {fields.map((f, i) => (
+                      <div key={i} className="flex flex-wrap gap-1">
+                        <dt className="text-[var(--color-ink-soft)]">{f.label}:</dt>
+                        <dd>
+                          {f.oldText !== undefined ? (
+                            <>
+                              <span className="text-[var(--color-ink-soft)] line-through">{f.oldText}</span>
+                              {" → "}
+                              <span className="font-medium">{f.newText}</span>
+                            </>
+                          ) : (
+                            f.newText
+                          )}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </details>
+              );
+            })()}
           </div>
         ))}
         {(entries ?? []).length === 0 && (
