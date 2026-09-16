@@ -17,7 +17,8 @@ export function MobileTabBar() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-10 flex justify-between border-t border-[var(--color-line)] bg-[var(--color-surface)] px-2 py-2 md:hidden">
       {tabs.map((tab) => {
-        const active = tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
+        const active =
+          tab.href === "/" ? pathname === "/" : pathname === tab.href || pathname.startsWith(`${tab.href}/`);
         return (
           <Link
             key={tab.href}

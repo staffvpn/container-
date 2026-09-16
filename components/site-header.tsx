@@ -23,7 +23,8 @@ export function SiteHeader() {
 
       <nav className="flex h-14 items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-1.5 text-base text-[var(--color-ink-soft)]">
         {navItems.map((item) => {
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const active =
+            item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
