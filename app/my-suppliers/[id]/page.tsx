@@ -100,7 +100,7 @@ export default async function MySupplierPage({
     supabase.from("supplier_service_cities").select("city_id").eq("supplier_id", id),
     supabase.from("supplier_addresses").select("*").eq("supplier_id", id).order("is_primary", { ascending: false }),
     canManageMembers
-      ? supabase.from("supplier_members").select("id, role, user_id, profiles(display_name, telegram_username)").eq("supplier_id", id)
+      ? supabase.from("supplier_members").select("id, role, user_id, profiles!user_id(display_name, telegram_username)").eq("supplier_id", id)
       : Promise.resolve({ data: [] }),
     canManageMembers
       ? supabase

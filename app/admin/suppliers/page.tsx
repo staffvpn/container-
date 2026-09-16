@@ -32,7 +32,7 @@ export default async function AdminSuppliersPage({
   const supabase = await createServerSupabaseClient();
   let query = supabase
     .from("suppliers")
-    .select("id, slug, name, status, verification_level, rating, review_count, created_at, updated_at, deleted_at, cities(name)")
+    .select("id, slug, name, status, verification_level, rating, review_count, created_at, updated_at, deleted_at, cities!city_id(name)")
     .order("created_at", { ascending: false });
 
   if (showDeleted) {

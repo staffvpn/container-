@@ -44,7 +44,7 @@ export default async function EditSupplierPage({
     supabase.from("supplier_addresses").select("*").eq("supplier_id", id).order("is_primary", { ascending: false }),
     supabase
       .from("supplier_members")
-      .select("id, role, user_id, profiles(display_name, telegram_username)")
+      .select("id, role, user_id, profiles!user_id(display_name, telegram_username)")
       .eq("supplier_id", id),
     supabase
       .from("ownership_invitations")
