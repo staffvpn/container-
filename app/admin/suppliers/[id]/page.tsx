@@ -106,6 +106,7 @@ export default async function EditSupplierPage({
         <AdminSupplierActions supplierId={id} status={supplier.status} isDeleted={!!supplier.deleted_at} />
       </div>
       <AdminSupplierForm
+        key={supplier.updated_at}
         action={boundUpdate}
         categories={categories}
         cities={cities}

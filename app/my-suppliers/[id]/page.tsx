@@ -165,6 +165,7 @@ export default async function MySupplierPage({
         <ReadOnlySupplierView supplier={supplier} cities={cities} categories={categories} categoryLinks={categoryLinks ?? []} />
       ) : (
         <AdminSupplierForm
+          key={supplier.updated_at}
           action={boundUpdate}
           categories={categories}
           cities={cities}
