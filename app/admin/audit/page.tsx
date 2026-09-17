@@ -49,23 +49,47 @@ export default async function AuditLogPage({
 }) {
   const params = await searchParams;
   const entityType = readParam(params, "entity");
+  const actorId = readParam(params, "actor");
 
   const supabase = await createServerSupabaseClient();
   let query = supabase
     .from("audit_log")
-    .select("id, actor_user_id, actor_role, entity_type, entity_id, action, old_value, new_value, note, created_at, profiles(display_name, telegram_username)")
+    .select("id, actor_user_id, actor_role, entity_type, entity_id, action, old_value, new_value, note, created_at, profiles!actor_user_id(display_name, telegram_username)")
     .order("created_at", { ascending: false })
     .limit(200);
 
   if (entityType) query = query.eq("entity_type", entityType);
+  if (actorId) query = query.eq("actor_user_id", actorId);
 
   const { data: entries, error } = await query;
+
+  let actorName: string | null = null;
+  if (actorId) {
+    const { data: actorProfile } = await supabase
+      .from("profiles")
+      .select("display_name, telegram_username")
+      .eq("id", actorId)
+      .maybeSingle();
+    actorName = actorProfile?.display_name || actorProfile?.telegram_username || actorId;
+  }
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">Журнал действий</h1>
 
+      {actorId && (
+        <div className="flex items-center gap-2 text-sm">
+          <span>
+            Действия администратора: <span className="font-medium">{actorName}</span>
+          </span>
+          <a href={`/admin/audit${entityType ? `?entity=${entityType}` : ""}`} className="text-[var(--color-accent)] underline">
+            Сбросить
+          </a>
+        </div>
+      )}
+
       <form className="flex flex-wrap items-center gap-2" method="get">
+        {actorId && <input type="hidden" name="actor" value={actorId} />}
         <select
           name="entity"
           defaultValue={entityType}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { AdminPermissionsForm } from "@/components/admin/admin-permissions-form";
 import { promoteToAdmin } from "@/app/admin/admins/actions";
@@ -55,12 +56,20 @@ export default async function AdminsPage({
         <h2 className="text-lg font-semibold">Текущие администраторы</h2>
         {(admins ?? []).map((admin) => (
           <div key={admin.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
-            <p className="font-medium">
-              {admin.display_name || admin.telegram_username || admin.id}
-              {admin.id === currentUser?.id && (
-                <span className="ml-2 rounded-full bg-[var(--color-panel)] px-2 py-0.5 text-xs">Это вы</span>
-              )}
-            </p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-medium">
+                {admin.display_name || admin.telegram_username || admin.id}
+                {admin.id === currentUser?.id && (
+                  <span className="ml-2 rounded-full bg-[var(--color-panel)] px-2 py-0.5 text-xs">Это вы</span>
+                )}
+              </p>
+              <Link
+                href={`/admin/audit?actor=${admin.id}`}
+                className="text-sm text-[var(--color-accent)] underline"
+              >
+                История действий
+              </Link>
+            </div>
             <div className="mt-3">
               <AdminPermissionsForm
                 userId={admin.id}
