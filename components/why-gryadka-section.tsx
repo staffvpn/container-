@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 const points = [
@@ -8,21 +9,25 @@ const points = [
     title: "Поставщики разбросаны по десяткам сайтов и чатов",
     detail:
       "Каждый поставщик — отдельный сайт, прайс-лист или чат в Telegram. Чтобы сравнить пять поставщиков кофе, приходится открывать пять вкладок и переписываться в разных местах. Грядка собирает всё в одном каталоге.",
+    image: null,
   },
   {
     title: "Сложно сравнить условия, доставку и минимальный заказ",
     detail:
       "Минимальный заказ, способы оплаты, отсрочка платежа и регионы доставки — у каждого поставщика указаны по-своему или вообще нигде. В карточке поставщика в Грядке эти условия показаны в одном виде, который легко сравнить.",
+    image: "/images/why-us-2.jpg",
   },
   {
     title: "Непонятно, кому из поставщиков можно доверять",
     detail:
       "Статусы «Профиль подтверждён» и «Проверен Грядкой» присваиваются только после проверки — это не декоративный значок, а реальная отметка о том, что информация прошла проверку.",
+    image: null,
   },
   {
     title: "Поиск нового поставщика занимает недели",
     detail:
       "Вместо звонков по знакомым и поиска в поисковике — фильтр по городу, категории и условиям работы, который сразу показывает подходящих поставщиков.",
+    image: null,
   },
 ];
 
@@ -66,6 +71,16 @@ export function WhyGryadkaSection() {
 
       <div className="flex flex-col gap-4">
         <div className="relative flex aspect-[4/3] items-end overflow-hidden rounded-[28px] bg-[var(--color-panel)] md:aspect-auto md:min-h-[420px]">
+          {current.image && (
+            <Image
+              key={current.image}
+              src={current.image}
+              alt=""
+              fill
+              sizes="(min-width: 768px) 55vw, 100vw"
+              className="object-cover"
+            />
+          )}
           <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 to-transparent" />
           <p className="relative max-w-md p-6 text-white md:p-8">{current.detail}</p>
         </div>

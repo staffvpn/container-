@@ -177,35 +177,39 @@ export default async function HomePage() {
 
         <WhyGryadkaSection />
 
-        <section className="flex flex-col gap-6">
-          <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
-            Поставщики
-          </span>
-          <h2 className="text-3xl font-semibold md:text-4xl">
-            Проверенные поставщики для вашего бизнеса
-          </h2>
-          <p className="max-w-xl text-[var(--color-ink-soft)]">
-            От небольших локальных производителей до крупных дистрибьюторов — с реальным
-            рейтингом и условиями работы.
-          </p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {topSuppliers.map((supplier) => (
-              <SupplierCard key={supplier.slug} supplier={supplier} />
-            ))}
-          </div>
-        </section>
+        {topSuppliers.length > 0 && (
+          <section className="flex flex-col gap-6">
+            <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
+              Поставщики
+            </span>
+            <h2 className="text-3xl font-semibold md:text-4xl">
+              Проверенные поставщики для вашего бизнеса
+            </h2>
+            <p className="max-w-xl text-[var(--color-ink-soft)]">
+              От небольших локальных производителей до крупных дистрибьюторов — с реальным
+              рейтингом и условиями работы.
+            </p>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {topSuppliers.map((supplier) => (
+                <SupplierCard key={supplier.slug} supplier={supplier} />
+              ))}
+            </div>
+          </section>
+        )}
 
-        <section className="flex flex-col gap-6">
-          <h2 className="text-3xl font-semibold md:text-4xl">Акции и спецпредложения</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {offers.map((offer) => {
-              const supplier = popularSuppliers.find((s) => s.slug === offer.supplierSlug);
-              return (
-                <OfferTeaserCard key={offer.id} offer={offer} supplierName={supplier?.name ?? ""} />
-              );
-            })}
-          </div>
-        </section>
+        {offers.length > 0 && (
+          <section className="flex flex-col gap-6">
+            <h2 className="text-3xl font-semibold md:text-4xl">Акции и спецпредложения</h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {offers.map((offer) => {
+                const supplier = popularSuppliers.find((s) => s.slug === offer.supplierSlug);
+                return (
+                  <OfferTeaserCard key={offer.id} offer={offer} supplierName={supplier?.name ?? ""} />
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         <section className="relative flex aspect-[21/9] w-full items-end overflow-hidden rounded-[32px] bg-[var(--color-ink)]">
           <Image
