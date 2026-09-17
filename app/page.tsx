@@ -26,7 +26,7 @@ const segments = [
     name: "Отели",
     category: "chemistry",
     tags: ["Химия", "Мебель", "IT-сервисы"],
-    image: null,
+    image: "/images/segment-hotel.jpg",
   },
   {
     name: "Кейтеринг",
