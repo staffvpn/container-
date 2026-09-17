@@ -92,13 +92,13 @@ export default async function HomePage() {
 
           <div className="group relative h-[560px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
-              src="/images/hero-garden-table.png"
+              src="/images/hero-delivery.jpg"
               alt=""
               fill
               priority
               sizes="(min-width: 768px) 55vw, 100vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
-              style={{ objectPosition: "50% 35%" }}
+              style={{ objectPosition: "35% 50%" }}
             />
             <p className="absolute left-6 top-6 max-w-xs text-sm text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.4)]">
               Поставщики для кофеен, ресторанов, баров и других заведений HoReCa.
