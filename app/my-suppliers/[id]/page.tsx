@@ -24,7 +24,9 @@ export default async function MySupplierPage({
   searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
-  const memberQuery = readParam(await searchParams, "memberQuery");
+  const resolvedSearchParams = await searchParams;
+  const memberQuery = readParam(resolvedSearchParams, "memberQuery");
+  const statsPeriod = readParam(resolvedSearchParams, "period") || "30";
   const supabase = await createServerSupabaseClient();
 
   const {
@@ -113,6 +115,18 @@ export default async function MySupplierPage({
 
   if (!supplier) notFound();
 
+  const statsSince =
+    statsPeriod === "all"
+      ? null
+      : new Date(Date.now() - Number(statsPeriod) * 24 * 60 * 60 * 1000).toISOString();
+  let statsEventsQuery = supabase.from("analytics_events").select("event_type").eq("supplier_id", id);
+  if (statsSince) statsEventsQuery = statsEventsQuery.gte("created_at", statsSince);
+  const { data: statsEvents } = await statsEventsQuery;
+  const statsCounts = (statsEvents ?? []).reduce<Record<string, number>>((acc, e) => {
+    acc[e.event_type] = (acc[e.event_type] ?? 0) + 1;
+    return acc;
+  }, {});
+
   let searchResults: { id: string; display_name: string | null; telegram_username: string | null }[] = [];
   if (memberQuery && canManageMembers) {
     const memberUserIds = (memberRows ?? []).map((m) => m.user_id);
@@ -185,6 +199,44 @@ export default async function MySupplierPage({
           <AdminSupplierActions supplierId={id} status={supplier.status} isDeleted={!!supplier.deleted_at} />
         </div>
       )}
+
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Статистика</h2>
+          <div className="flex gap-2">
+            {[
+              { key: "7", label: "7 дней" },
+              { key: "30", label: "30 дней" },
+              { key: "90", label: "90 дней" },
+              { key: "all", label: "Весь период" },
+            ].map((p) => (
+              <a
+                key={p.key}
+                href={`?period=${p.key}`}
+                className={`rounded-full border px-3 py-1.5 text-xs ${
+                  statsPeriod === p.key ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white" : "border-[var(--color-line)] hover:border-[var(--color-ink)]"
+                }`}
+              >
+                {p.label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {[
+            { label: "Просмотры профиля", value: statsCounts.view_supplier ?? 0 },
+            { label: "Переходы на сайт", value: statsCounts.click_website ?? 0 },
+            { label: "Клики Telegram", value: statsCounts.click_telegram ?? 0 },
+            { label: "Клики телефона", value: statsCounts.click_phone ?? 0 },
+            { label: "Копирований промокодов", value: statsCounts.copy_promo ?? 0 },
+          ].map((s) => (
+            <div key={s.label} className="flex flex-col gap-1 rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
+              <span className="text-xl font-semibold">{s.value}</span>
+              <span className="text-xs text-[var(--color-ink-soft)]">{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div>
         <h2 className="mb-3 text-lg font-semibold">Адреса и точки</h2>
