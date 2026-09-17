@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { InvitationActions } from "@/components/invitation-actions";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Приглашения",
 };

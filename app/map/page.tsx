@@ -6,6 +6,8 @@ import { SupplierMapLoader } from "@/components/supplier-map-loader";
 import { CityGate } from "@/components/city-gate";
 import type { SupplierFilters } from "@/lib/data/types";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Карта поставщиков",
   description: "Поставщики для HoReCa на карте — фильтр по городу и категории.",

@@ -3,6 +3,8 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { TelegramLoginButton } from "@/components/telegram-login-button";
 import { LogoutButton } from "@/components/logout-button";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Профиль",
 };

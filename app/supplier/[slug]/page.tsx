@@ -11,6 +11,8 @@ import { TrackedLink } from "@/components/tracked-link";
 import { ClaimOwnershipSection } from "@/components/claim-ownership-section";
 import { ComplaintButton } from "@/components/complaint-button";
 
+export const runtime = "edge";
+
 const statusLabel: Record<string, string | null> = {
   unverified: null,
   confirmed: "Профиль подтвержден",

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 
+export const runtime = "edge";
+
 export async function GET(request: NextRequest) {
   const to = request.nextUrl.searchParams.get("to");
   const supplierSlug = request.nextUrl.searchParams.get("supplier");

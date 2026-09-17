@@ -5,6 +5,8 @@ import { getCategories, getCities } from "@/lib/data/suppliers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { BecomeSupplierSection } from "@/components/become-supplier-section";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Для поставщиков",
 };

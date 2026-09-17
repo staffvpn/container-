@@ -3,6 +3,8 @@ import { getSuppliers, getOffers } from "@/lib/data/suppliers";
 import { OfferCard } from "@/components/offer-card";
 import { OffersFilterBar } from "@/components/offers-filter-bar";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Предложения",
   description: "Акции, скидки и специальные условия от поставщиков для заведений HoReCa.",

@@ -7,6 +7,8 @@ import { SortDropdown } from "@/components/sort-dropdown";
 import { AddSupplierSection } from "@/components/add-supplier-section";
 import type { SupplierFilters } from "@/lib/data/types";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Поставщики",
   description: "Найдите поставщика для кофейни, ресторана, бара или другого заведения HoReCa.",
