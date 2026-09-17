@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import { one } from "@/lib/data/one";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getAdminCategories, getAdminCities } from "@/lib/admin/queries";
 import { AdminSupplierForm } from "@/components/admin/supplier-form";
@@ -174,16 +175,16 @@ export default async function MySupplierPage({
     id: m.id,
     role: m.role,
     user_id: m.user_id,
-    display_name: m.profiles?.display_name ?? null,
-    telegram_username: m.profiles?.telegram_username ?? null,
+    display_name: one(m.profiles)?.display_name ?? null,
+    telegram_username: one(m.profiles)?.telegram_username ?? null,
   }));
   const invitations = (invitationRows ?? []).map((inv) => ({
     id: inv.id,
     role_offered: inv.role_offered,
     status: inv.status,
     invited_user_id: inv.invited_user_id,
-    display_name: inv.profiles?.display_name ?? null,
-    telegram_username: inv.profiles?.telegram_username ?? null,
+    display_name: one(inv.profiles)?.display_name ?? null,
+    telegram_username: one(inv.profiles)?.telegram_username ?? null,
   }));
 
   const boundUpdate = updateSupplier.bind(null, id);

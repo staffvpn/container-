@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { formatAuditValues } from "@/lib/admin/audit-format";
+import { one } from "@/lib/data/one";
 
 const actionLabels: Record<string, string> = {
   created: "Создание",
@@ -116,7 +117,7 @@ export default async function AuditLogPage({
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p>
                 <span className="font-medium">
-                  {entry.profiles?.display_name || entry.profiles?.telegram_username || "Система"}
+                  {one(entry.profiles)?.display_name || one(entry.profiles)?.telegram_username || "Система"}
                 </span>
                 {" — "}
                 <span>{actionLabels[entry.action] ?? entry.action}</span>

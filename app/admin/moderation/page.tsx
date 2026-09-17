@@ -9,6 +9,7 @@ import {
   ProfileChangeActions,
 } from "@/components/admin/moderation-actions";
 import { formatAuditValues } from "@/lib/admin/audit-format";
+import { one } from "@/lib/data/one";
 
 const issueTypeLabels: Record<string, string> = {
   wrong_phone: "Неверный телефон",
@@ -136,7 +137,7 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
                 <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">{a.status}</span>
               </div>
               <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
-                {[a.cities?.name, a.phone, a.email, a.website, a.telegram].filter(Boolean).join(" · ")}
+                {[one(a.cities)?.name, a.phone, a.email, a.website, a.telegram].filter(Boolean).join(" · ")}
               </p>
               {a.description && <p className="mt-1 text-sm">{a.description}</p>}
               {a.address && <p className="mt-1 text-sm text-[var(--color-ink-soft)]">Адрес: {a.address}</p>}
@@ -161,11 +162,11 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
                 <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">{s.status}</span>
               </div>
               <p className="mt-1 text-sm text-[var(--color-ink-soft)]">
-                {[s.cities?.name, s.categories?.name, s.website].filter(Boolean).join(" · ")}
+                {[one(s.cities)?.name, one(s.categories)?.name, s.website].filter(Boolean).join(" · ")}
               </p>
               {s.comment && <p className="mt-1 text-sm">{s.comment}</p>}
               <p className="mt-1 text-xs text-[var(--color-ink-soft)]">
-                От: {s.profiles?.display_name || s.profiles?.telegram_username || "Пользователь"}
+                От: {one(s.profiles)?.display_name || one(s.profiles)?.telegram_username || "Пользователь"}
               </p>
               {s.status === "pending" && (
                 <div className="mt-3">
@@ -183,12 +184,12 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
           {(allReviews ?? []).map((r) => (
             <div key={r.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-medium">{r.suppliers?.name} · ★ {r.overall_rating}</p>
+                <p className="font-medium">{one(r.suppliers)?.name} · ★ {r.overall_rating}</p>
                 <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">{r.status}</span>
               </div>
               <p className="mt-1 text-sm">{r.comment}</p>
               <p className="mt-1 text-xs text-[var(--color-ink-soft)]">
-                {r.profiles?.display_name || r.profiles?.telegram_username || "Пользователь"} · {new Date(r.created_at).toLocaleDateString("ru-RU")}
+                {one(r.profiles)?.display_name || one(r.profiles)?.telegram_username || "Пользователь"} · {new Date(r.created_at).toLocaleDateString("ru-RU")}
               </p>
               <div className="mt-3">
                 <ReviewModerationActions reviewId={r.id} status={r.status} />
@@ -204,12 +205,12 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
           {(allReports ?? []).map((r) => (
             <div key={r.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-medium">{r.suppliers?.name} — {issueTypeLabels[r.issue_type] ?? r.issue_type}</p>
+                <p className="font-medium">{one(r.suppliers)?.name} — {issueTypeLabels[r.issue_type] ?? r.issue_type}</p>
                 <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">{r.status === "open" ? "Открыто" : "Закрыто"}</span>
               </div>
               {r.comment && <p className="mt-1 text-sm">{r.comment}</p>}
               <p className="mt-1 text-xs text-[var(--color-ink-soft)]">
-                {r.profiles?.display_name || r.profiles?.telegram_username || "Пользователь"} · {new Date(r.created_at).toLocaleDateString("ru-RU")}
+                {one(r.profiles)?.display_name || one(r.profiles)?.telegram_username || "Пользователь"} · {new Date(r.created_at).toLocaleDateString("ru-RU")}
               </p>
               <div className="mt-3">
                 <ErrorReportActions reportId={r.id} status={r.status} />
@@ -235,7 +236,7 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
                 {c.description && <p className="mt-1 text-sm">{c.description}</p>}
                 {c.admin_note && <p className="mt-1 text-sm text-[var(--color-ink-soft)]">Заметка: {c.admin_note}</p>}
                 <p className="mt-1 text-xs text-[var(--color-ink-soft)]">
-                  {c.profiles?.display_name || c.profiles?.telegram_username || "Пользователь"} · {new Date(c.created_at).toLocaleDateString("ru-RU")}
+                  {one(c.profiles)?.display_name || one(c.profiles)?.telegram_username || "Пользователь"} · {new Date(c.created_at).toLocaleDateString("ru-RU")}
                 </p>
                 <div className="mt-3">
                   <ComplaintActions complaintId={c.id} supplierEntityId={supplier?.id} />
@@ -263,7 +264,7 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <a href={`/admin/suppliers/${s.id}`} className="font-medium underline">{s.name}</a>
                   <span className="text-xs text-[var(--color-ink-soft)]">
-                    {s.profiles?.display_name || s.profiles?.telegram_username || "Пользователь"} ·{" "}
+                    {one(s.profiles)?.display_name || one(s.profiles)?.telegram_username || "Пользователь"} ·{" "}
                     {s.pending_changes_submitted_at && new Date(s.pending_changes_submitted_at).toLocaleString("ru-RU")}
                   </span>
                 </div>

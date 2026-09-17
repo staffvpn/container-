@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { one } from "@/lib/data/one";
 import Link from "next/link";
 import { getCategories, getCities } from "@/lib/data/suppliers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -36,9 +37,9 @@ export default async function SuppliersPortalPage() {
           <div className="flex flex-col gap-2">
             {(myCompanies ?? []).map((m) => (
               <div key={m.id} className="flex items-center justify-between">
-                <span>{m.suppliers?.name}</span>
+                <span>{one(m.suppliers)?.name}</span>
                 <Link
-                  href={`/my-suppliers/${m.suppliers?.id}`}
+                  href={`/my-suppliers/${one(m.suppliers)?.id}`}
                   className="text-sm font-medium text-[var(--color-accent)] underline"
                 >
                   Управлять

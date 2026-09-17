@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { one } from "@/lib/data/one";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { AdminSupplierActions } from "@/components/admin/supplier-actions";
 
@@ -110,7 +111,7 @@ export default async function AdminSuppliersPage({
                     {s.name}
                   </Link>
                 </td>
-                <td className="px-4 py-3 text-[var(--color-ink-soft)]">{s.cities?.name ?? "—"}</td>
+                <td className="px-4 py-3 text-[var(--color-ink-soft)]">{one(s.cities)?.name ?? "—"}</td>
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">
                     {statusLabels[s.status] ?? s.status}

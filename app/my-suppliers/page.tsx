@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { one } from "@/lib/data/one";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -38,11 +39,11 @@ export default async function MySuppliersPage() {
       <div className="flex flex-col gap-3">
         {(memberships ?? []).map((m) => (
           <Link
-            key={m.suppliers?.id}
-            href={`/my-suppliers/${m.suppliers?.id}`}
+            key={one(m.suppliers)?.id}
+            href={`/my-suppliers/${one(m.suppliers)?.id}`}
             className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-line)] p-4 hover:border-[var(--color-ink)]"
           >
-            <p className="font-medium">{m.suppliers?.name}</p>
+            <p className="font-medium">{one(m.suppliers)?.name}</p>
             <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-0.5 text-xs">{roleLabels[m.role] ?? m.role}</span>
           </Link>
         ))}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { one } from "@/lib/data/one";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { InvitationActions } from "@/components/invitation-actions";
@@ -45,7 +46,7 @@ export default async function InvitationsPage() {
       <div className="flex flex-col gap-3">
         {(invitations ?? []).map((inv) => (
           <div key={inv.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
-            <p className="font-medium">{inv.suppliers?.name}</p>
+            <p className="font-medium">{one(inv.suppliers)?.name}</p>
             <p className="text-sm text-[var(--color-ink-soft)]">
               Вам предложена роль: {roleLabels[inv.role_offered] ?? inv.role_offered}
             </p>

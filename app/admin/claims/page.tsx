@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { AdminClaimActions } from "@/components/admin/claim-actions";
+import { one } from "@/lib/data/one";
 
 const statusLabels: Record<string, string> = {
   new: "Новая",
@@ -64,8 +65,8 @@ export default async function ClaimsQueuePage({
           <div key={claim.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="font-medium">
-                {claim.suppliers?.name} —{" "}
-                {claim.profiles?.display_name || claim.profiles?.telegram_username || "Пользователь"}
+                {one(claim.suppliers)?.name} —{" "}
+                {one(claim.profiles)?.display_name || one(claim.profiles)?.telegram_username || "Пользователь"}
               </p>
               <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">
                 {statusLabels[claim.status] ?? claim.status}
