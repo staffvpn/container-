@@ -25,11 +25,18 @@ export async function generateMetadata({
   const { slug } = await params;
   const supplier = await getSupplierBySlug(slug);
   if (!supplier) {
-    return { title: "Поставщик не найден — Грядка" };
+    return { title: "Поставщик не найден" };
   }
   return {
-    title: `${supplier.name} — Грядка`,
+    title: supplier.name,
     description: supplier.shortDescription,
+    alternates: { canonical: `/supplier/${supplier.slug}` },
+    openGraph: {
+      title: supplier.name,
+      description: supplier.shortDescription,
+      url: `/supplier/${supplier.slug}`,
+      type: "profile",
+    },
   };
 }
 

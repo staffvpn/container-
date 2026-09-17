@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { InvitationActions } from "@/components/invitation-actions";
 
 export const metadata: Metadata = {
-  title: "Приглашения — Грядка",
+  title: "Приглашения",
 };
 
 const roleLabels: Record<string, string> = {

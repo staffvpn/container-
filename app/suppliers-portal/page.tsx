@@ -5,7 +5,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { BecomeSupplierSection } from "@/components/become-supplier-section";
 
 export const metadata: Metadata = {
-  title: "Для поставщиков — Грядка",
+  title: "Для поставщиков",
 };
 
 export default async function SuppliersPortalPage() {

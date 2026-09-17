@@ -4,7 +4,7 @@ import { TelegramLoginButton } from "@/components/telegram-login-button";
 import { LogoutButton } from "@/components/logout-button";
 
 export const metadata: Metadata = {
-  title: "Профиль — Грядка",
+  title: "Профиль",
 };
 
 export default async function ProfilePage() {

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Мои компании — Грядка",
+  title: "Мои компании",
 };
 
 const roleLabels: Record<string, string> = {

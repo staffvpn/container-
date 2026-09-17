@@ -7,8 +7,9 @@ import { CityGate } from "@/components/city-gate";
 import type { SupplierFilters } from "@/lib/data/types";
 
 export const metadata: Metadata = {
-  title: "Карта поставщиков — Грядка",
+  title: "Карта поставщиков",
   description: "Поставщики для HoReCa на карте — фильтр по городу и категории.",
+  alternates: { canonical: "/map" },
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;

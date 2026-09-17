@@ -6,9 +6,24 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 
+const siteUrl = "https://gryadka.example";
+
 export const metadata: Metadata = {
-  title: "Грядка",
-  description: "Платформа поставщиков для HoReCa",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Грядка — поставщики для HoReCa",
+    template: "%s — Грядка",
+  },
+  description: "Платформа, где заведения HoReCa находят поставщиков и сравнивают условия — без десятка открытых вкладок.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    siteName: "Грядка",
+    type: "website",
+    locale: "ru_RU",
+    url: siteUrl,
+    title: "Грядка — поставщики для HoReCa",
+    description: "Платформа, где заведения HoReCa находят поставщиков и сравнивают условия — без десятка открытых вкладок.",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

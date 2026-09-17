@@ -8,8 +8,9 @@ import { AddSupplierSection } from "@/components/add-supplier-section";
 import type { SupplierFilters } from "@/lib/data/types";
 
 export const metadata: Metadata = {
-  title: "Поставщики — Грядка",
+  title: "Поставщики",
   description: "Найдите поставщика для кофейни, ресторана, бара или другого заведения HoReCa.",
+  alternates: { canonical: "/suppliers" },
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;
