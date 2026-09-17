@@ -2,7 +2,7 @@ import type { Supplier } from "../types";
 
 export const suppliers: Supplier[] = [
   {
-    slug: "rostery-nord",
+    id: "rostery-nord", slug: "rostery-nord",
     name: "Rostery Nord",
     city: "moscow",
     regions: ["moscow", "spb"],
@@ -33,7 +33,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-08-20",
   },
   {
-    slug: "molterra",
+    id: "molterra", slug: "molterra",
     name: "Молтерра",
     city: "moscow",
     regions: ["moscow"],
@@ -64,7 +64,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-06-22",
   },
   {
-    slug: "upak-snab",
+    id: "upak-snab", slug: "upak-snab",
     name: "УпакСнаб",
     city: "spb",
     regions: ["spb", "moscow"],
@@ -94,7 +94,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-06-30",
   },
   {
-    slug: "baristek",
+    id: "baristek", slug: "baristek",
     name: "Баристек",
     city: "moscow",
     regions: ["moscow", "spb"],
@@ -124,7 +124,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-09-10",
   },
   {
-    slug: "chaynyy-dom-vostok",
+    id: "chaynyy-dom-vostok", slug: "chaynyy-dom-vostok",
     name: "Чайный Дом Восток",
     city: "kazan",
     regions: ["kazan", "ekaterinburg"],
@@ -155,7 +155,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-07-15",
   },
   {
-    slug: "barhat-mebel",
+    id: "barhat-mebel", slug: "barhat-mebel",
     name: "Бархат Мебель",
     city: "moscow",
     regions: ["moscow"],
@@ -184,7 +184,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-08-02",
   },
   {
-    slug: "posuda-plus",
+    id: "posuda-plus", slug: "posuda-plus",
     name: "Посуда+",
     city: "ekaterinburg",
     regions: ["ekaterinburg"],
@@ -213,7 +213,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-06-25",
   },
   {
-    slug: "chisto-pro",
+    id: "chisto-pro", slug: "chisto-pro",
     name: "ЧистоПро",
     city: "moscow",
     regions: ["moscow"],
@@ -244,7 +244,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-07-28",
   },
   {
-    slug: "kassa-oblako",
+    id: "kassa-oblako", slug: "kassa-oblako",
     name: "Касса Облако",
     city: "spb",
     regions: ["spb"],
@@ -274,7 +274,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-09-05",
   },
   {
-    slug: "barmen-school",
+    id: "barmen-school", slug: "barmen-school",
     name: "Школа Бармена",
     city: "moscow",
     regions: ["moscow"],
@@ -304,7 +304,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-07-10",
   },
   {
-    slug: "log-express",
+    id: "log-express", slug: "log-express",
     name: "ЛогЭкспресс",
     city: "novosibirsk",
     regions: ["novosibirsk"],
@@ -332,7 +332,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-06-18",
   },
   {
-    slug: "vino-yug",
+    id: "vino-yug", slug: "vino-yug",
     name: "Вино Юга",
     city: "krasnodar",
     regions: ["krasnodar", "moscow"],
@@ -363,7 +363,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-08-25",
   },
   {
-    slug: "myasnoy-dvor",
+    id: "myasnoy-dvor", slug: "myasnoy-dvor",
     name: "Мясной Двор",
     city: "moscow",
     regions: ["moscow"],
@@ -394,7 +394,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-09-01",
   },
   {
-    slug: "sirop-lab",
+    id: "sirop-lab", slug: "sirop-lab",
     name: "Сироп Лаб",
     city: "spb",
     regions: ["spb", "moscow"],
@@ -425,7 +425,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-08-30",
   },
   {
-    slug: "stol-i-stul",
+    id: "stol-i-stul", slug: "stol-i-stul",
     name: "Стол и Стул",
     city: "ekaterinburg",
     regions: ["ekaterinburg"],
@@ -454,7 +454,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-06-27",
   },
   {
-    slug: "pekarnya-opt",
+    id: "pekarnya-opt", slug: "pekarnya-opt",
     name: "Пекарня Опт",
     city: "moscow",
     regions: ["moscow"],
@@ -485,7 +485,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-08-12",
   },
   {
-    slug: "bar-oborud",
+    id: "bar-oborud", slug: "bar-oborud",
     name: "БарОборудование",
     city: "krasnodar",
     regions: ["krasnodar"],
@@ -515,7 +515,7 @@ export const suppliers: Supplier[] = [
     updatedAt: "2026-07-20",
   },
   {
-    slug: "eco-pack-nsk",
+    id: "eco-pack-nsk", slug: "eco-pack-nsk",
     name: "ЭкоПак НСК",
     city: "novosibirsk",
     regions: ["novosibirsk", "ekaterinburg"],

@@ -3,6 +3,7 @@ import { supplierLocation } from "./geo";
 import type { Supplier, Category, City, Offer, SupplierFilters, SearchResult, Review, SupplierMapPoint, SupplierAddress } from "./types";
 
 type SupplierRow = {
+  id: string;
   slug: string;
   name: string;
   short_description: string;
@@ -29,6 +30,7 @@ type SupplierRow = {
 
 function mapSupplierRow(row: SupplierRow): Supplier {
   return {
+    id: row.id,
     slug: row.slug,
     name: row.name,
     city: row.cities.slug,
@@ -60,7 +62,7 @@ function mapSupplierRow(row: SupplierRow): Supplier {
 }
 
 const SUPPLIER_SELECT = `
-  slug, name, short_description, about, founded_year, rating, review_count,
+  id, slug, name, short_description, about, founded_year, rating, review_count,
   verification_level, website_url, telegram, phone, min_order,
   delivery_available, pickup_available, works_with_legal_entities,
   works_with_individual_entrepreneurs, deferred_payment, payment_methods, updated_at,
@@ -156,15 +158,15 @@ type OfferRow = {
   description: string;
   expires_at: string | null;
   categories: { slug: string } | null;
-  suppliers: { slug: string; cities: { slug: string } };
-  promo_codes: { code: string }[];
+  suppliers: { id: string; slug: string; cities: { slug: string } };
+  promo_codes: { id: string; code: string }[];
 };
 
 export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
   const supabase = createSupabasePublicClient();
   let query = supabase
     .from("offers")
-    .select("id, title, description, expires_at, categories(slug), suppliers!inner(slug, cities!city_id(slug)), promo_codes(code)")
+    .select("id, title, description, expires_at, categories(slug), suppliers!inner(id, slug, cities!city_id(slug)), promo_codes(id, code)")
     .eq("status", "published");
 
   if (supplierSlug) {
@@ -176,6 +178,7 @@ export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
 
   return data.map((row) => ({
     id: row.id,
+    supplierId: row.suppliers.id,
     supplierSlug: row.suppliers.slug,
     title: row.title,
     description: row.description,
@@ -183,6 +186,7 @@ export async function getOffers(supplierSlug?: string): Promise<Offer[]> {
     city: row.suppliers.cities.slug,
     expiresAt: row.expires_at ?? undefined,
     promoCode: row.promo_codes[0]?.code,
+    promoCodeId: row.promo_codes[0]?.id,
   }));
 }
 

@@ -29,6 +29,7 @@ export interface SupplierContacts {
 }
 
 export interface Supplier {
+  id: string;
   slug: string;
   name: string;
   city: string;
@@ -48,6 +49,7 @@ export interface Supplier {
 
 export interface Offer {
   id: string;
+  supplierId: string;
   supplierSlug: string;
   title: string;
   description: string;
@@ -55,6 +57,7 @@ export interface Offer {
   category?: string;
   expiresAt?: string;
   promoCode?: string;
+  promoCodeId?: string;
 }
 
 export interface SupplierFilters {

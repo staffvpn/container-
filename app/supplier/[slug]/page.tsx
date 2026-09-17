@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getSupplierBySlug, getOffers, getCities, getCategories, getReviews, getSupplierAddresses } from "@/lib/data/suppliers";
+import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { SupplierLogo } from "@/components/supplier-logo";
 import { ShareButton } from "@/components/share-button";
 import { ReviewsList } from "@/components/reviews-list";
@@ -35,6 +36,11 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const supplier = await getSupplierBySlug(slug);
   if (!supplier) notFound();
+
+  void createSupabasePublicClient()
+    .from("analytics_events")
+    .insert({ event_type: "view_supplier", supplier_id: supplier.id, source_page: "supplier_page" })
+    .then(() => {});
 
   const [cities, categories, supplierOffers, reviews, addresses] = await Promise.all([
     getCities(),
@@ -78,6 +84,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
             <TrackedLink
               href={`tel:${supplier.contacts.phone}`}
               eventType="click_phone"
+              supplierId={supplier.id}
               className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
             >
               Позвонить
@@ -87,6 +94,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
             <TrackedLink
               href={supplier.contacts.telegram}
               eventType="click_telegram"
+              supplierId={supplier.id}
               className="rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm hover:border-[var(--color-ink)]"
             >
               Telegram

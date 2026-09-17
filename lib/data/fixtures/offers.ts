@@ -3,7 +3,7 @@ import type { Offer } from "../types";
 export const offers: Offer[] = [
   {
     id: "o1",
-    supplierSlug: "rostery-nord",
+    supplierSlug: "rostery-nord", supplierId: "rostery-nord",
     title: "Бесплатная доставка от 15 000 ₽",
     description: "Доставка кофе по Москве без наценки при заказе от 15 000 ₽.",
     city: "moscow",
@@ -12,7 +12,7 @@ export const offers: Offer[] = [
   },
   {
     id: "o2",
-    supplierSlug: "sirop-lab",
+    supplierSlug: "sirop-lab", supplierId: "sirop-lab",
     title: "−15% новым клиентам",
     description: "Скидка на первый заказ сиропов и топпингов для новых кофеен.",
     city: "spb",
@@ -22,7 +22,7 @@ export const offers: Offer[] = [
   },
   {
     id: "o3",
-    supplierSlug: "vino-yug",
+    supplierSlug: "vino-yug", supplierId: "vino-yug",
     title: "Специальные условия для баров",
     description: "Расширенная отсрочка платежа для баров при заказе от 10 000 ₽.",
     city: "krasnodar",
@@ -31,7 +31,7 @@ export const offers: Offer[] = [
   },
   {
     id: "o4",
-    supplierSlug: "eco-pack-nsk",
+    supplierSlug: "eco-pack-nsk", supplierId: "eco-pack-nsk",
     title: "Бесплатный образец упаковки",
     description: "Пробный набор биоразлагаемой упаковки для новых клиентов.",
     city: "novosibirsk",
@@ -41,7 +41,7 @@ export const offers: Offer[] = [
   },
   {
     id: "o5",
-    supplierSlug: "myasnoy-dvor",
+    supplierSlug: "myasnoy-dvor", supplierId: "myasnoy-dvor",
     title: "−10% на первый заказ мяса",
     description: "Скидка для новых ресторанов и кафе на первую поставку мясной продукции.",
     city: "moscow",
@@ -51,7 +51,7 @@ export const offers: Offer[] = [
   },
   {
     id: "o6",
-    supplierSlug: "kassa-oblako",
+    supplierSlug: "kassa-oblako", supplierId: "kassa-oblako",
     title: "Бесплатное подключение кассы",
     description: "Настройка и подключение облачной кассы без оплаты за первый месяц.",
     city: "spb",
@@ -60,7 +60,7 @@ export const offers: Offer[] = [
   },
   {
     id: "o7",
-    supplierSlug: "barhat-mebel",
+    supplierSlug: "barhat-mebel", supplierId: "barhat-mebel",
     title: "Рассрочка на мебель для кафе",
     description: "Рассрочка 0% на 6 месяцев при заказе мебели для нового заведения.",
     city: "moscow",

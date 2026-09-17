@@ -11,6 +11,11 @@ export function trackEvent(input: {
   eventType: EventType;
   queryText?: string;
   sourcePage?: string;
+  supplierId?: string;
+  offerId?: string;
+  promoCodeId?: string;
+  categoryId?: string;
+  cityId?: string;
 }): void {
   const supabase = createBrowserSupabaseClient();
   void supabase
@@ -19,6 +24,11 @@ export function trackEvent(input: {
       event_type: input.eventType,
       query_text: input.queryText ?? null,
       source_page: input.sourcePage ?? null,
+      supplier_id: input.supplierId ?? null,
+      offer_id: input.offerId ?? null,
+      promo_code_id: input.promoCodeId ?? null,
+      category_id: input.categoryId ?? null,
+      city_id: input.cityId ?? null,
     })
     .then(() => {});
 }

@@ -38,7 +38,9 @@ export function OfferCard({ offer, supplierName }: { offer: Offer; supplierName:
       )}
 
       <div className="mt-2 flex flex-wrap items-center gap-3">
-        {offer.promoCode && <PromoCodeButton code={offer.promoCode} />}
+        {offer.promoCode && (
+          <PromoCodeButton code={offer.promoCode} promoCodeId={offer.promoCodeId} supplierId={offer.supplierId} />
+        )}
         <Link
           href={`/supplier/${offer.supplierSlug}`}
           className="rounded-full bg-[var(--color-ink)] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90"
