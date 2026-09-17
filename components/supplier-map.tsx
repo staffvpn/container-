@@ -132,13 +132,13 @@ export function SupplierMap({
           <p style="font-weight:600;margin:0;">${escapeHtml(point.supplierName)}</p>
           <p style="font-size:13px;color:#6b6f68;margin:0;">★ ${point.rating.toFixed(1)}</p>
           ${addressLine}
-          <a href="/supplier/${point.supplierSlug}" style="margin-top:4px;font-size:13px;font-weight:500;color:#3c673a;text-decoration:underline;">Открыть профиль</a>
+          <a href="/supplier/${point.supplierSlug}" style="margin-top:4px;font-size:13px;font-weight:500;color:#8a795d;text-decoration:underline;">Открыть профиль</a>
         </div>
       `;
       // Primary addresses (or the single fallback point for suppliers with
       // no real address on file) get the solid brand-green pin; secondary
       // addresses of the same supplier get a lighter, visually distinct pin.
-      const marker = new Marker({ color: point.isPrimary ? "#3c673a" : "#8fae8d" })
+      const marker = new Marker({ color: point.isPrimary ? "#8a795d" : "#c5bcae" })
         .setLngLat([point.lng, point.lat])
         .setPopup(new Popup({ offset: 24 }).setHTML(popupHtml))
         .addTo(map);
