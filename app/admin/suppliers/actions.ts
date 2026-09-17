@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { requireSupplierAccess, logAudit as logSupplierAudit } from "@/lib/admin/supplier-access";
 
@@ -70,7 +69,7 @@ async function uniqueSlug(
   }
 }
 
-export type SupplierFormState = { error?: string; notice?: string };
+export type SupplierFormState = { error?: string; notice?: string; id?: string };
 
 function parseCommon(formData: FormData) {
   return {
@@ -159,7 +158,7 @@ export async function createSupplier(_prev: SupplierFormState, formData: FormDat
   await logAudit(supabase, userId, "admin", inserted.id, "created", null, fields);
 
   revalidatePath("/admin/suppliers");
-  redirect(`/admin/suppliers/${inserted.id}`);
+  return { id: inserted.id };
 }
 
 export async function updateSupplier(
@@ -382,5 +381,4 @@ export async function hardDeleteSupplier(supplierId: string) {
 
   await logAudit(supabase, userId, actingAs, supplierId, "hard_deleted", existing, null);
   revalidatePath("/admin/suppliers");
-  redirect("/admin/suppliers");
 }

@@ -10,7 +10,7 @@ import { LogoUploader } from "@/components/admin/logo-uploader";
 import { NewsManager } from "@/components/admin/news-manager";
 import { OffersManager } from "@/components/admin/offers-manager";
 import { updateSupplier } from "@/app/admin/suppliers/actions";
-import { exitImpersonation } from "@/app/my-suppliers/[id]/impersonation-actions";
+import { ExitImpersonationButton } from "@/components/exit-impersonation-button";
 
 export const runtime = "edge";
 
@@ -196,11 +196,7 @@ export default async function MySupplierPage({
       {isImpersonating && (
         <div className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] bg-[#fff4d6] px-4 py-3 text-sm">
           <p>Вы управляете карточкой от имени администратора платформы.</p>
-          <form action={exitImpersonation.bind(null, id)}>
-            <button type="submit" className="shrink-0 rounded-full border border-[var(--color-ink)] px-4 py-1.5 font-medium hover:bg-white">
-              Выйти из режима управления
-            </button>
-          </form>
+          <ExitImpersonationButton supplierId={id} />
         </div>
       )}
 

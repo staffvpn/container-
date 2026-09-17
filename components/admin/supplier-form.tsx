@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import type { AdminCategory, AdminCity } from "@/lib/admin/queries";
 import type { SupplierFormState } from "@/app/admin/suppliers/actions";
 
@@ -68,6 +69,14 @@ export function AdminSupplierForm({
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   const d = defaults ?? {};
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.id) {
+      router.push(`/admin/suppliers/${state.id}`);
+      router.refresh();
+    }
+  }, [state.id, router]);
 
   return (
     <form action={formAction} className="flex max-w-3xl flex-col gap-6">

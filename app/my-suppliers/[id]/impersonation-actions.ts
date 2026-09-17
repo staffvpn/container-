@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export async function exitImpersonation(supplierId: string) {
@@ -19,5 +18,4 @@ export async function exitImpersonation(supplierId: string) {
       new_value: null,
     });
   }
-  redirect("/admin/suppliers");
 }

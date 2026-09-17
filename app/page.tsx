@@ -100,11 +100,10 @@ export default async function HomePage() {
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               style={{ objectPosition: "35% 50%" }}
             />
-            <p className="absolute left-6 top-6 max-w-xs text-sm text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.4)]">
-              Поставщики для кофеен, ресторанов, баров и других заведений HoReCa.
-            </p>
-            <div className="absolute bottom-4 right-4 rounded-[20px] bg-[var(--color-ink)] px-5 py-4 text-white">
-              <p className="text-sm font-medium">★ 4.9 средний рейтинг</p>
+            <div className="absolute bottom-4 right-4 max-w-xs rounded-[20px] bg-[var(--color-ink)] px-5 py-4 text-white">
+              <p className="text-sm font-medium">
+                Поставщики для кофеен, ресторанов, баров и других заведений HoReCa.
+              </p>
             </div>
           </div>
         </section>

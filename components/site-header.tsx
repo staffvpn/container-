@@ -18,7 +18,7 @@ export function SiteHeader() {
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
       <Link href="/" className="flex h-14 items-center transition-transform duration-200 hover:scale-105">
-        <Image src="/images/logo1.png" alt="Грядка" width={220} height={67} className="h-10 w-auto" priority />
+        <Image src="/images/logo1.png" alt="Грядка" width={220} height={67} className="h-14 w-auto" priority />
       </Link>
 
       <nav className="flex h-14 items-center gap-1 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-1.5 text-base text-[var(--color-ink-soft)]">
@@ -44,13 +44,13 @@ export function SiteHeader() {
           href="https://t.me/nagryadke"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-10 items-center rounded-full bg-[var(--color-ink)] px-4 text-sm text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
+          className="flex h-10 items-center rounded-full bg-[var(--color-accent)] px-4 text-sm text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
         >
-          Telegram
+          Наш Telegram
         </a>
         <Link
           href="/profile"
-          className="flex h-10 items-center rounded-full bg-[var(--color-ink)] px-4 text-sm text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
+          className="flex h-10 items-center rounded-full bg-[var(--color-accent)] px-4 text-sm text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
         >
           Профиль
         </Link>

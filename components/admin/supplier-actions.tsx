@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   setSupplierStatus,
   softDeleteSupplier,
@@ -18,6 +19,7 @@ export function AdminSupplierActions({
   isDeleted: boolean;
 }) {
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   function run(action: () => Promise<void>) {
     startTransition(() => {
@@ -41,7 +43,11 @@ export function AdminSupplierActions({
           disabled={pending}
           onClick={() => {
             if (confirm("Удалить безвозвратно? Это действие нельзя отменить.")) {
-              run(() => hardDeleteSupplier(supplierId));
+              startTransition(async () => {
+                await hardDeleteSupplier(supplierId);
+                router.push("/admin/suppliers");
+                router.refresh();
+              });
             }
           }}
           className="rounded-full border border-[#b3261e] px-3 py-1 text-xs text-[#b3261e] hover:bg-[#b3261e] hover:text-white"
