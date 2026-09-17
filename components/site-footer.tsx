@@ -21,9 +21,9 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-[var(--color-ink)] px-6 py-16 text-white md:px-16">
-      <div className="mx-auto flex max-w-[1800px] flex-col gap-12">
-        <div className="flex flex-col gap-10 md:flex-row md:justify-between">
-          <div className="flex max-w-xs flex-col gap-4">
+      <div className="mx-auto flex max-w-5xl flex-col gap-12">
+        <div className="flex flex-col gap-10 md:flex-row md:gap-20">
+          <div className="flex max-w-xs shrink-0 flex-col gap-4">
             <Image
               src="/images/logo1.png"
               alt="Грядка"

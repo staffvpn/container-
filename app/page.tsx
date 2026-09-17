@@ -14,21 +14,25 @@ const segments = [
     name: "Кофейни",
     category: "coffee-tea",
     tags: ["Кофе", "Выпечка", "Сиропы"],
+    image: "/images/segment-coffee.png",
   },
   {
     name: "Рестораны и бары",
     category: "alcohol",
     tags: ["Продукты", "Алкоголь", "Оборудование"],
+    image: "/images/segment-bar.png",
   },
   {
     name: "Отели",
     category: "chemistry",
     tags: ["Химия", "Мебель", "IT-сервисы"],
+    image: null,
   },
   {
     name: "Кейтеринг",
     category: "packaging",
     tags: ["Упаковка", "Логистика", "Посуда"],
+    image: "/images/segment-catering.png",
   },
 ];
 
@@ -87,13 +91,13 @@ export default async function HomePage() {
 
           <div className="relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
-              src="/images/hero-farm.png"
+              src="/images/hero-garden-table.png"
               alt=""
               fill
               priority
               sizes="(min-width: 768px) 55vw, 100vw"
               className="object-cover"
-              style={{ objectPosition: "70% 40%" }}
+              style={{ objectPosition: "50% 35%" }}
             />
             <p className="absolute left-6 top-6 max-w-xs text-sm text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.4)]">
               Поставщики для кофеен, ресторанов, баров и других заведений HoReCa.
@@ -126,11 +130,23 @@ export default async function HomePage() {
                 href={`/suppliers?category=${segment.category}`}
                 className="group flex flex-col gap-3 rounded-[28px] bg-[var(--color-panel)] p-4"
               >
-                <div className="flex aspect-[4/5] flex-col justify-end gap-2 rounded-[20px] bg-[var(--color-ink)]/5 p-3">
+                <div className="relative flex aspect-[4/5] flex-col justify-end gap-2 overflow-hidden rounded-[20px] bg-[var(--color-ink)]/5 p-3">
+                  {segment.image && (
+                    <>
+                      <Image
+                        src={segment.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+                    </>
+                  )}
                   {segment.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="w-fit rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs font-medium"
+                      className="relative w-fit rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs font-medium"
                     >
                       {tag}
                     </span>
@@ -192,6 +208,14 @@ export default async function HomePage() {
         </section>
 
         <section className="relative flex aspect-[21/9] w-full items-end overflow-hidden rounded-[32px] bg-[var(--color-ink)]">
+          <Image
+            src="/images/telegram-banner.png"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 to-transparent" />
           <div className="relative mx-auto flex max-w-xl flex-col items-center gap-4 p-8 text-center text-white md:p-12">
             <h2 className="text-3xl font-semibold">Наш Telegram-канал</h2>
