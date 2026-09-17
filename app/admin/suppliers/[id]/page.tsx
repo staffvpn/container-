@@ -8,6 +8,7 @@ import { SupplierMembers } from "@/components/admin/supplier-members";
 import { LogoUploader } from "@/components/admin/logo-uploader";
 import { AdminSupplierActions } from "@/components/admin/supplier-actions";
 import { NewsManager } from "@/components/admin/news-manager";
+import { OffersManager } from "@/components/admin/offers-manager";
 import { updateSupplier } from "@/app/admin/suppliers/actions";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -62,6 +63,36 @@ export default async function EditSupplierPage({
     .select("id, title, content, status, created_at")
     .eq("supplier_id", id)
     .order("created_at", { ascending: false });
+
+  const { data: offerRows } = await supabase
+    .from("offers")
+    .select("id, title, description, status, expires_at, promo_codes(id, code)")
+    .eq("supplier_id", id)
+    .order("created_at", { ascending: false });
+
+  const promoCodeIds = (offerRows ?? [])
+    .flatMap((o) => o.promo_codes ?? [])
+    .map((p: { id: string }) => p.id);
+  const { data: promoEvents } =
+    promoCodeIds.length > 0
+      ? await supabase.from("analytics_events").select("promo_code_id").eq("event_type", "copy_promo").in("promo_code_id", promoCodeIds)
+      : { data: [] };
+  const copyCountByPromoId = (promoEvents ?? []).reduce<Record<string, number>>((acc, e) => {
+    if (e.promo_code_id) acc[e.promo_code_id] = (acc[e.promo_code_id] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const offers = (offerRows ?? []).map((o) => {
+    const promo = Array.isArray(o.promo_codes) ? o.promo_codes[0] : o.promo_codes;
+    return {
+      id: o.id,
+      title: o.title,
+      description: o.description,
+      status: o.status,
+      expires_at: o.expires_at,
+      promoCode: promo ? { code: promo.code, copyCount: copyCountByPromoId[promo.id] ?? 0 } : null,
+    };
+  });
 
   let searchResults: { id: string; display_name: string | null; telegram_username: string | null }[] = [];
   if (memberQuery) {
@@ -128,6 +159,11 @@ export default async function EditSupplierPage({
       <div className="max-w-3xl">
         <h2 className="mb-3 text-lg font-semibold">Адреса и точки</h2>
         <AddressManager supplierId={id} addresses={addresses ?? []} cities={cities} />
+      </div>
+
+      <div className="max-w-3xl">
+        <h2 className="mb-3 text-lg font-semibold">Предложения и промокоды</h2>
+        <OffersManager supplierId={id} offers={offers} categories={categories} />
       </div>
 
       <div className="max-w-3xl">
