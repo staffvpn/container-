@@ -12,6 +12,8 @@ import { NewsManager } from "@/components/admin/news-manager";
 import { OffersManager } from "@/components/admin/offers-manager";
 import { updateSupplier } from "@/app/admin/suppliers/actions";
 
+export const runtime = "edge";
+
 type SearchParams = Record<string, string | string[] | undefined>;
 
 function readParam(params: SearchParams, key: string): string {
