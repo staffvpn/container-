@@ -224,7 +224,7 @@ export default async function HomePage() {
               Telegram-канале.
             </p>
             <a
-              href="https://t.me/gryadka"
+              href="https://t.me/nagryadke"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[var(--color-ink)] hover:opacity-90"

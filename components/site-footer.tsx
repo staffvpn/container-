@@ -13,7 +13,7 @@ const navLinks = [
 const companyLinks = [
   { href: "/profile", label: "Профиль" },
   { href: "/#become-supplier", label: "Стать поставщиком" },
-  { href: "https://t.me/gryadka", label: "Telegram-канал", external: true },
+  { href: "https://t.me/nagryadke", label: "Telegram-канал", external: true },
 ];
 
 export function SiteFooter() {
