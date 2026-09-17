@@ -39,12 +39,22 @@ export function SiteHeader() {
         })}
       </nav>
 
-      <Link
-        href="/profile"
-        className="flex h-14 items-center rounded-full bg-[var(--color-ink)] px-6 text-base text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
-      >
-        Профиль
-      </Link>
+      <div className="flex items-center gap-2">
+        <a
+          href="https://t.me/nagryadke"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-10 items-center rounded-full bg-[var(--color-ink)] px-4 text-sm text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
+        >
+          Telegram
+        </a>
+        <Link
+          href="/profile"
+          className="flex h-10 items-center rounded-full bg-[var(--color-ink)] px-4 text-sm text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
+        >
+          Профиль
+        </Link>
+      </div>
     </header>
   );
 }

@@ -47,6 +47,25 @@ html {
   }
 }
 
+@layer base {
+  button,
+  a {
+    transition-property: background-color, color, border-color, opacity, filter;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+  }
+
+  button:not(:disabled):active,
+  a:active {
+    filter: brightness(0.92);
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

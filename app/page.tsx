@@ -225,7 +225,7 @@ export default async function HomePage() {
         <Reveal>
         <section className="group relative flex aspect-[21/9] w-full items-end overflow-hidden rounded-[32px] bg-[var(--color-ink)]">
           <Image
-            src="/images/telegram-banner.png"
+            src="/images/telegram-banner.jpg"
             alt=""
             fill
             sizes="100vw"
