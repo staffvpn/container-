@@ -42,12 +42,19 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
     .insert({ event_type: "view_supplier", supplier_id: supplier.id, source_page: "supplier_page" })
     .then(() => {});
 
-  const [cities, categories, supplierOffers, reviews, addresses] = await Promise.all([
+  const [cities, categories, supplierOffers, reviews, addresses, { data: news }] = await Promise.all([
     getCities(),
     getCategories(),
     getOffers(supplier.slug),
     getReviews(supplier.slug),
     getSupplierAddresses(supplier.slug),
+    createSupabasePublicClient()
+      .from("news")
+      .select("id, title, content, created_at")
+      .eq("supplier_id", supplier.id)
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .limit(10),
   ]);
 
   const cityName = cities.find((c) => c.slug === supplier.city)?.name ?? supplier.city;
@@ -182,6 +189,23 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
                     Показать на карте
                   </a>
                 )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {(news ?? []).length > 0 && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold">Новости</h2>
+          <div className="flex flex-col gap-3">
+            {(news ?? []).map((item) => (
+              <div key={item.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
+                <p className="font-medium">{item.title}</p>
+                <p className="mt-1 text-sm text-[var(--color-ink-soft)]">{item.content}</p>
+                <p className="mt-2 text-xs text-[var(--color-ink-soft)]">
+                  {new Date(item.created_at).toLocaleDateString("ru-RU")}
+                </p>
               </div>
             ))}
           </div>

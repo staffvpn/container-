@@ -6,6 +6,7 @@ import { AddressManager } from "@/components/admin/address-manager";
 import { AdminSupplierActions } from "@/components/admin/supplier-actions";
 import { SupplierMembers } from "@/components/admin/supplier-members";
 import { LogoUploader } from "@/components/admin/logo-uploader";
+import { NewsManager } from "@/components/admin/news-manager";
 import { updateSupplier } from "@/app/admin/suppliers/actions";
 import { exitImpersonation } from "@/app/my-suppliers/[id]/impersonation-actions";
 
@@ -127,6 +128,10 @@ export default async function MySupplierPage({
     return acc;
   }, {});
 
+  const { data: newsRows } = canEdit
+    ? await supabase.from("news").select("id, title, content, status, created_at").eq("supplier_id", id).order("created_at", { ascending: false })
+    : { data: [] };
+
   let searchResults: { id: string; display_name: string | null; telegram_username: string | null }[] = [];
   if (memberQuery && canManageMembers) {
     const memberUserIds = (memberRows ?? []).map((m) => m.user_id);
@@ -236,6 +241,15 @@ export default async function MySupplierPage({
             </div>
           ))}
         </div>
+      </div>
+
+      <div>
+        <h2 className="mb-3 text-lg font-semibold">Новости</h2>
+        {canEdit ? (
+          <NewsManager supplierId={id} news={newsRows ?? []} />
+        ) : (
+          <p className="text-sm text-[var(--color-ink-soft)]">Управление новостями недоступно для вашей роли.</p>
+        )}
       </div>
 
       <div>

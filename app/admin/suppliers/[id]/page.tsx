@@ -7,6 +7,7 @@ import { AddressManager } from "@/components/admin/address-manager";
 import { SupplierMembers } from "@/components/admin/supplier-members";
 import { LogoUploader } from "@/components/admin/logo-uploader";
 import { AdminSupplierActions } from "@/components/admin/supplier-actions";
+import { NewsManager } from "@/components/admin/news-manager";
 import { updateSupplier } from "@/app/admin/suppliers/actions";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -55,6 +56,12 @@ export default async function EditSupplierPage({
   ]);
 
   if (!supplier) notFound();
+
+  const { data: newsRows } = await supabase
+    .from("news")
+    .select("id, title, content, status, created_at")
+    .eq("supplier_id", id)
+    .order("created_at", { ascending: false });
 
   let searchResults: { id: string; display_name: string | null; telegram_username: string | null }[] = [];
   if (memberQuery) {
@@ -121,6 +128,11 @@ export default async function EditSupplierPage({
       <div className="max-w-3xl">
         <h2 className="mb-3 text-lg font-semibold">Адреса и точки</h2>
         <AddressManager supplierId={id} addresses={addresses ?? []} cities={cities} />
+      </div>
+
+      <div className="max-w-3xl">
+        <h2 className="mb-3 text-lg font-semibold">Новости</h2>
+        <NewsManager supplierId={id} news={newsRows ?? []} />
       </div>
 
       <div className="max-w-3xl">
