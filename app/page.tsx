@@ -74,7 +74,7 @@ export default async function HomePage() {
         </section>
 
         <section className="grid grid-cols-1 gap-4 animate-[fade-up_0.8s_ease-out_0.2s_both] md:grid-cols-[0.8fr_1.2fr]">
-          <div className="group relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+          <div className="group relative h-[560px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-farm.png"
               alt=""
@@ -82,7 +82,7 @@ export default async function HomePage() {
               priority
               sizes="(min-width: 768px) 35vw, 100vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
-              style={{ objectPosition: "20% 50%" }}
+              style={{ objectPosition: "20% 75%" }}
             />
             <div className="absolute bottom-4 left-4 rounded-[20px] bg-[var(--color-surface)] px-5 py-4">
               <p className="text-2xl font-semibold tracking-tight">{popularSuppliers.length}+</p>
@@ -90,7 +90,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="group relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+          <div className="group relative h-[560px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-garden-table.png"
               alt=""
