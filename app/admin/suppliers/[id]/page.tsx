@@ -136,6 +136,15 @@ export default async function EditSupplierPage({
           Управлять от имени владельца
         </Link>
       </div>
+
+      {supplier.pending_changes && (
+        <div className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] bg-[#fff4d6] px-4 py-3 text-sm">
+          <p>Есть изменения профиля на проверке (отправлены {new Date(supplier.pending_changes_submitted_at).toLocaleString("ru-RU")}).</p>
+          <Link href="/admin/moderation?tab=profile_changes" className="shrink-0 rounded-full border border-[var(--color-ink)] px-4 py-1.5 font-medium hover:bg-white">
+            Посмотреть
+          </Link>
+        </div>
+      )}
       <div className="max-w-3xl">
         <LogoUploader supplierId={id} currentUrl={supplier.logo_url} />
       </div>

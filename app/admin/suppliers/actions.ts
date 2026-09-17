@@ -70,7 +70,7 @@ async function uniqueSlug(
   }
 }
 
-export type SupplierFormState = { error?: string };
+export type SupplierFormState = { error?: string; notice?: string };
 
 function parseCommon(formData: FormData) {
   return {
@@ -179,6 +179,30 @@ export async function updateSupplier(
   // Editors (content-level role) may not change publication status, verification, or internal admin notes.
   const canManageStatus = actingAs === "platform_admin" || actingAs === "owner" || actingAs === "admin";
 
+  // A non-admin editing an already-published supplier doesn't change the live, public profile
+  // directly — the edit is queued as a pending revision (old data stays visible) until an
+  // admin approves it. Platform admins always apply directly, since they are the moderator.
+  const requiresModeration = actingAs !== "platform_admin" && existing?.status === "published";
+
+  if (requiresModeration) {
+    const { error } = await supabase
+      .from("suppliers")
+      .update({
+        pending_changes: fields,
+        pending_changes_submitted_at: new Date().toISOString(),
+        pending_changes_submitted_by: userId,
+      })
+      .eq("id", supplierId);
+    if (error) {
+      return { error: `Не удалось сохранить: ${error.message}` };
+    }
+
+    await logAudit(supabase, userId, actingAs, supplierId, "profile_change_submitted", null, fields);
+    revalidatePath(`/admin/suppliers/${supplierId}`);
+    revalidatePath(`/my-suppliers/${supplierId}`);
+    return { notice: "Изменения отправлены на проверку администратору. Опубликованная версия карточки не изменится, пока изменения не одобрены." };
+  }
+
   const { error } = await supabase
     .from("suppliers")
     .update({
@@ -202,6 +226,9 @@ export async function updateSupplier(
       works_with_individual_entrepreneurs: fields.works_with_individual_entrepreneurs,
       deferred_payment: fields.deferred_payment,
       payment_methods: fields.payment_methods,
+      pending_changes: null,
+      pending_changes_submitted_at: null,
+      pending_changes_submitted_by: null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", supplierId);
@@ -230,6 +257,83 @@ export async function updateSupplier(
   revalidatePath(`/admin/suppliers/${supplierId}`);
   revalidatePath(`/my-suppliers/${supplierId}`);
   return {};
+}
+
+export async function approvePendingChanges(supplierId: string) {
+  const { supabase, userId } = await requireAdmin();
+
+  const { data: supplier } = await supabase
+    .from("suppliers")
+    .select("*")
+    .eq("id", supplierId)
+    .single();
+  if (!supplier?.pending_changes) throw new Error("Нет изменений на проверке.");
+
+  const fields = supplier.pending_changes as Record<string, unknown>;
+
+  const { error } = await supabase
+    .from("suppliers")
+    .update({
+      name: fields.name,
+      short_description: fields.short_description,
+      about: fields.about,
+      founded_year: fields.founded_year,
+      logo_url: fields.logo_url,
+      city_id: fields.city_id,
+      website_url: fields.website_url,
+      telegram: fields.telegram,
+      phone: fields.phone,
+      email: fields.email,
+      contact_notes: fields.contact_notes,
+      terms_notes: fields.terms_notes,
+      min_order: fields.min_order,
+      delivery_available: fields.delivery_available,
+      pickup_available: fields.pickup_available,
+      works_with_legal_entities: fields.works_with_legal_entities,
+      works_with_individual_entrepreneurs: fields.works_with_individual_entrepreneurs,
+      deferred_payment: fields.deferred_payment,
+      payment_methods: fields.payment_methods,
+      pending_changes: null,
+      pending_changes_submitted_at: null,
+      pending_changes_submitted_by: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", supplierId);
+  if (error) throw new Error(error.message);
+
+  const categoryIds = (fields.category_ids as string[]) ?? [];
+  await supabase.from("supplier_categories").delete().eq("supplier_id", supplierId);
+  if (categoryIds.length > 0) {
+    await supabase.from("supplier_categories").insert(categoryIds.map((category_id) => ({ supplier_id: supplierId, category_id })));
+  }
+
+  const serviceCityIds = (fields.service_city_ids as string[]) ?? [];
+  await supabase.from("supplier_service_cities").delete().eq("supplier_id", supplierId);
+  if (serviceCityIds.length > 0) {
+    await supabase.from("supplier_service_cities").insert(serviceCityIds.map((city_id) => ({ supplier_id: supplierId, city_id })));
+  }
+
+  await logAudit(supabase, userId, "admin", supplierId, "profile_change_approved", supplier, fields);
+  revalidatePath("/admin/suppliers");
+  revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
+}
+
+export async function rejectPendingChanges(supplierId: string, note?: string) {
+  const { supabase, userId } = await requireAdmin();
+
+  const { data: supplier } = await supabase.from("suppliers").select("pending_changes").eq("id", supplierId).single();
+
+  const { error } = await supabase
+    .from("suppliers")
+    .update({ pending_changes: null, pending_changes_submitted_at: null, pending_changes_submitted_by: null })
+    .eq("id", supplierId);
+  if (error) throw new Error(error.message);
+
+  await logAudit(supabase, userId, "admin", supplierId, "profile_change_rejected", supplier?.pending_changes, { note });
+  revalidatePath("/admin/suppliers");
+  revalidatePath(`/admin/suppliers/${supplierId}`);
+  revalidatePath(`/my-suppliers/${supplierId}`);
 }
 
 export async function setSupplierStatus(supplierId: string, status: string) {

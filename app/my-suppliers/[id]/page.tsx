@@ -203,6 +203,14 @@ export default async function MySupplierPage({
 
       <h1 className="text-2xl font-semibold">{supplier.name}</h1>
 
+      {supplier.pending_changes && (
+        <div className="rounded-[var(--radius-md)] bg-[#fff4d6] px-4 py-3 text-sm">
+          Ваши последние изменения отправлены на проверку администратору
+          {supplier.pending_changes_submitted_at && ` ${new Date(supplier.pending_changes_submitted_at).toLocaleString("ru-RU")}`}.
+          Опубликованная версия карточки пока не изменена.
+        </div>
+      )}
+
       {canEdit && <LogoUploader supplierId={id} currentUrl={supplier.logo_url} />}
 
       {!canEdit ? (

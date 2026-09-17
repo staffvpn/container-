@@ -74,6 +74,9 @@ export function AdminSupplierForm({
       {state.error && (
         <p className="rounded-[var(--radius-sm)] bg-[#fbe9e7] px-4 py-3 text-sm text-[#b3261e]">{state.error}</p>
       )}
+      {state.notice && (
+        <p className="rounded-[var(--radius-sm)] bg-[#fff4d6] px-4 py-3 text-sm">{state.notice}</p>
+      )}
 
       {(d.created_at || d.updated_at) && (
         <p className="text-xs text-[var(--color-ink-soft)]">

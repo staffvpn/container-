@@ -15,6 +15,7 @@ import {
   setComplaintStatus,
   blockSupplierFromComplaint,
 } from "@/app/admin/moderation/actions";
+import { approvePendingChanges, rejectPendingChanges } from "@/app/admin/suppliers/actions";
 
 function ActionButtons({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-wrap gap-2">{children}</div>;
@@ -156,6 +157,30 @@ export function ComplaintActions({
             Заблокировать поставщика
           </button>
         )}
+      </ActionButtons>
+    </div>
+  );
+}
+
+export function ProfileChangeActions({ supplierId }: { supplierId: string }) {
+  const { pending, run, error } = useModerationAction();
+  return (
+    <div className="flex flex-col gap-2">
+      {error && <p className="text-sm text-[#b3261e]">{error}</p>}
+      <ActionButtons>
+        <button disabled={pending} onClick={() => run(() => approvePendingChanges(supplierId))} className="rounded-full bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-white">
+          Одобрить изменения
+        </button>
+        <button
+          disabled={pending}
+          onClick={() => {
+            const note = prompt("Причина отклонения (необязательно):") ?? "";
+            run(() => rejectPendingChanges(supplierId, note));
+          }}
+          className="rounded-full border border-[#b3261e] px-3 py-1 text-xs text-[#b3261e] hover:bg-[#b3261e] hover:text-white"
+        >
+          Отклонить
+        </button>
       </ActionButtons>
     </div>
   );

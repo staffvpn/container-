@@ -6,7 +6,9 @@ import {
   SuggestionActions,
   ApplicationActions,
   ComplaintActions,
+  ProfileChangeActions,
 } from "@/components/admin/moderation-actions";
+import { formatAuditValues } from "@/lib/admin/audit-format";
 
 const issueTypeLabels: Record<string, string> = {
   wrong_phone: "Неверный телефон",
@@ -45,6 +47,7 @@ const tabs = [
   { key: "reviews", label: "Отзывы" },
   { key: "errors", label: "Сообщения об ошибках" },
   { key: "complaints", label: "Жалобы" },
+  { key: "profile_changes", label: "Изменения профилей" },
 ] as const;
 
 export default async function ModerationPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -86,12 +89,19 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
       : { data: [] };
   const supplierById = new Map((complaintSuppliers ?? []).map((s) => [s.id, s]));
 
+  const { data: pendingProfileChanges } = await supabase
+    .from("suppliers")
+    .select("*, profiles!pending_changes_submitted_by(display_name, telegram_username)")
+    .not("pending_changes", "is", null)
+    .order("pending_changes_submitted_at", { ascending: false });
+
   const counts = {
     applications: pendingApplications?.length ?? 0,
     suggestions: pendingSuggestions?.length ?? 0,
     reviews: pendingReviews?.length ?? 0,
     errors: openReports?.length ?? 0,
     complaints: newComplaints?.length ?? 0,
+    profile_changes: pendingProfileChanges?.length ?? 0,
   };
 
   return (
@@ -234,6 +244,52 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
             );
           })}
           {(allComplaints ?? []).length === 0 && <p className="p-6 text-center text-sm text-[var(--color-ink-soft)]">Жалоб нет.</p>}
+        </div>
+      )}
+
+      {tab === "profile_changes" && (
+        <div className="flex flex-col gap-3">
+          {(pendingProfileChanges ?? []).map((s) => {
+            const pending = (s.pending_changes ?? {}) as Record<string, unknown>;
+            const oldSubset: Record<string, unknown> = {};
+            for (const key of Object.keys(pending)) {
+              if (key === "category_ids" || key === "service_city_ids") continue;
+              oldSubset[key] = (s as Record<string, unknown>)[key];
+            }
+            const { category_ids: _newCategoryIds, service_city_ids: _newServiceCityIds, ...pendingWithoutJunctions } = pending;
+            const fields = formatAuditValues(oldSubset, pendingWithoutJunctions);
+            return (
+              <div key={s.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <a href={`/admin/suppliers/${s.id}`} className="font-medium underline">{s.name}</a>
+                  <span className="text-xs text-[var(--color-ink-soft)]">
+                    {s.profiles?.display_name || s.profiles?.telegram_username || "Пользователь"} ·{" "}
+                    {s.pending_changes_submitted_at && new Date(s.pending_changes_submitted_at).toLocaleString("ru-RU")}
+                  </span>
+                </div>
+                {fields.length === 0 ? (
+                  <p className="mt-2 text-sm text-[var(--color-ink-soft)]">Нет отличий от текущей версии.</p>
+                ) : (
+                  <dl className="mt-2 flex flex-col gap-1 rounded-[var(--radius-sm)] bg-[var(--color-panel)] p-3 text-sm">
+                    {fields.map((f, i) => (
+                      <div key={i} className="flex flex-wrap gap-1">
+                        <dt className="text-[var(--color-ink-soft)]">{f.label}:</dt>
+                        <dd>
+                          <span className="text-[var(--color-ink-soft)] line-through">{f.oldText}</span>
+                          {" → "}
+                          <span className="font-medium">{f.newText}</span>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+                <div className="mt-3">
+                  <ProfileChangeActions supplierId={s.id} />
+                </div>
+              </div>
+            );
+          })}
+          {(pendingProfileChanges ?? []).length === 0 && <p className="p-6 text-center text-sm text-[var(--color-ink-soft)]">Изменений на проверке нет.</p>}
         </div>
       )}
     </div>
