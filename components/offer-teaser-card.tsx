@@ -3,7 +3,7 @@ import type { Offer } from "@/lib/data/types";
 
 export function OfferTeaserCard({ offer, supplierName }: { offer: Offer; supplierName: string }) {
   return (
-    <div className="flex flex-col gap-3 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-3">
+    <div className="flex flex-col gap-3 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className="flex aspect-[16/10] items-center justify-center rounded-[calc(var(--radius-md)-8px)] bg-[var(--color-panel)] text-xs uppercase tracking-widest text-[var(--color-ink-soft)]">
         Акция
       </div>

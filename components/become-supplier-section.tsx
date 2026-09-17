@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { BecomeSupplierForm } from "./become-supplier-form";
 import type { Category, City } from "@/lib/data/types";
 
@@ -32,15 +33,17 @@ export function BecomeSupplierSection({
     <>
       <section
         id="become-supplier"
-        className="flex flex-col items-center gap-4 rounded-[var(--radius-md)] bg-[var(--color-panel)] px-8 py-10 text-center"
+        className="relative flex flex-col items-center gap-4 overflow-hidden rounded-[var(--radius-md)] px-8 py-16 text-center"
       >
-        <h2 className="text-2xl font-semibold">Стать поставщиком</h2>
-        <p className="max-w-md text-[var(--color-ink-soft)]">
+        <Image src="/images/become-supplier.jpg" alt="" fill sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-black/55" />
+        <h2 className="relative text-2xl font-semibold text-white">Стать поставщиком</h2>
+        <p className="relative max-w-md text-white/80">
           Разместите компанию в Грядке и получайте заявки от заведений HoReCa.
         </p>
         <button
           onClick={() => setOpen(true)}
-          className="rounded-full bg-[var(--color-ink)] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90"
+          className="relative rounded-full bg-white px-6 py-2.5 text-sm font-medium text-[var(--color-ink)] transition-transform duration-200 hover:scale-105 hover:opacity-90"
         >
           Оставить заявку
         </button>

@@ -8,6 +8,7 @@ import { OfferTeaserCard } from "@/components/offer-teaser-card";
 import { BecomeSupplierSection } from "@/components/become-supplier-section";
 import { WhyGryadkaSection } from "@/components/why-gryadka-section";
 import { ArrowIconButton } from "@/components/arrow-icon-button";
+import { Reveal } from "@/components/reveal";
 
 const segments = [
   {
@@ -51,36 +52,36 @@ export default async function HomePage() {
         <section className="flex flex-col items-center gap-6 text-center">
           <Link
             href="/suppliers"
-            className="flex items-center gap-2 rounded-full bg-[var(--color-accent-soft)] px-4 py-2 text-xs font-medium uppercase tracking-wide text-[var(--color-accent)]"
+            className="group flex items-center gap-2 rounded-full bg-[var(--color-accent-soft)] px-4 py-2 text-xs font-medium uppercase tracking-wide text-[var(--color-accent)] transition-transform duration-200 hover:scale-105"
           >
             Платформа для HoReCa
             <ArrowIconButton />
           </Link>
 
-          <h1 className="max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+          <h1 className="max-w-3xl animate-[fade-up_0.8s_ease-out] text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
             Найдите поставщика для своего бизнеса
           </h1>
 
-          <div className="flex w-full max-w-xl flex-col items-center gap-3">
+          <div className="flex w-full max-w-xl flex-col items-center gap-3 animate-[fade-up_0.8s_ease-out_0.1s_both]">
             <SearchBar />
             <Link
               href="/#become-supplier"
-              className="text-sm font-medium text-[var(--color-ink-soft)] underline decoration-[var(--color-accent)] decoration-2 underline-offset-4"
+              className="text-sm font-medium text-[var(--color-ink-soft)] underline decoration-[var(--color-accent)] decoration-2 underline-offset-4 transition-colors hover:text-[var(--color-ink)]"
             >
               Стать поставщиком
             </Link>
           </div>
         </section>
 
-        <section className="grid grid-cols-1 gap-4 md:grid-cols-[0.8fr_1.2fr]">
-          <div className="relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+        <section className="grid grid-cols-1 gap-4 animate-[fade-up_0.8s_ease-out_0.2s_both] md:grid-cols-[0.8fr_1.2fr]">
+          <div className="group relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-farm.png"
               alt=""
               fill
               priority
               sizes="(min-width: 768px) 35vw, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               style={{ objectPosition: "20% 50%" }}
             />
             <div className="absolute bottom-4 left-4 rounded-[20px] bg-[var(--color-surface)] px-5 py-4">
@@ -89,14 +90,14 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
+          <div className="group relative h-[460px] overflow-hidden rounded-[32px] bg-[var(--color-panel)]">
             <Image
               src="/images/hero-garden-table.png"
               alt=""
               fill
               priority
               sizes="(min-width: 768px) 55vw, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               style={{ objectPosition: "50% 35%" }}
             />
             <p className="absolute left-6 top-6 max-w-xs text-sm text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.4)]">
@@ -110,6 +111,7 @@ export default async function HomePage() {
       </div>
 
       <div className="mx-auto flex w-full max-w-[1800px] flex-col gap-24 px-6 py-20 md:px-12 md:py-24 lg:px-20">
+        <Reveal>
         <section className="flex flex-col gap-10 md:flex-row md:items-start">
           <div className="flex max-w-xs shrink-0 flex-col gap-4">
             <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
@@ -128,7 +130,7 @@ export default async function HomePage() {
               <Link
                 key={segment.name}
                 href={`/suppliers?category=${segment.category}`}
-                className="group flex flex-col gap-3 rounded-[28px] bg-[var(--color-panel)] p-4"
+                className="group flex flex-col gap-3 rounded-[28px] bg-[var(--color-panel)] p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="relative flex aspect-[4/5] flex-col justify-end gap-2 overflow-hidden rounded-[20px] bg-[var(--color-ink)]/5 p-3">
                   {segment.image && (
@@ -162,7 +164,9 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+        </Reveal>
 
+        <Reveal>
         <section className="flex flex-col gap-6">
           <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
             Категории
@@ -174,10 +178,14 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+        </Reveal>
 
+        <Reveal>
         <WhyGryadkaSection />
+        </Reveal>
 
         {topSuppliers.length > 0 && (
+          <Reveal>
           <section className="flex flex-col gap-6">
             <span className="w-fit rounded-full bg-[var(--color-panel)] px-4 py-1.5 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
               Поставщики
@@ -195,9 +203,11 @@ export default async function HomePage() {
               ))}
             </div>
           </section>
+          </Reveal>
         )}
 
         {offers.length > 0 && (
+          <Reveal>
           <section className="flex flex-col gap-6">
             <h2 className="text-3xl font-semibold md:text-4xl">Акции и спецпредложения</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -209,15 +219,17 @@ export default async function HomePage() {
               })}
             </div>
           </section>
+          </Reveal>
         )}
 
-        <section className="relative flex aspect-[21/9] w-full items-end overflow-hidden rounded-[32px] bg-[var(--color-ink)]">
+        <Reveal>
+        <section className="group relative flex aspect-[21/9] w-full items-end overflow-hidden rounded-[32px] bg-[var(--color-ink)]">
           <Image
             src="/images/telegram-banner.png"
             alt=""
             fill
             sizes="100vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 to-transparent" />
@@ -231,14 +243,17 @@ export default async function HomePage() {
               href="https://t.me/nagryadke"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[var(--color-ink)] hover:opacity-90"
+              className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[var(--color-ink)] transition-transform duration-200 hover:scale-105 hover:opacity-90"
             >
               Перейти в канал
             </a>
           </div>
         </section>
+        </Reveal>
 
+        <Reveal>
         <BecomeSupplierSection categories={categories} cities={cities} />
+        </Reveal>
       </div>
     </main>
   );

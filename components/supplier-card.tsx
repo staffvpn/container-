@@ -25,9 +25,11 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
   ].filter((part): part is string => Boolean(part));
 
   return (
-    <div className="relative flex flex-col gap-6 rounded-[var(--radius-md)] bg-[var(--color-panel)] p-5 pb-6">
-      <div className="relative flex aspect-square items-center justify-center">
-        <SupplierLogo name={supplier.name} size="lg" />
+    <div className="group relative flex flex-col gap-6 rounded-[var(--radius-md)] bg-[var(--color-panel)] p-5 pb-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative flex aspect-square items-center justify-center overflow-hidden">
+        <div className="transition-transform duration-300 group-hover:scale-105">
+          <SupplierLogo name={supplier.name} size="lg" />
+        </div>
 
         {categoryNames.length > 0 && (
           <div className="absolute bottom-0 left-0 flex flex-col items-start gap-1.5">
@@ -59,7 +61,7 @@ export function SupplierCard({ supplier }: { supplier: Supplier }) {
       <Link
         href={`/supplier/${supplier.slug}`}
         aria-label={`Открыть профиль ${supplier.name}`}
-        className="absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-white hover:opacity-90"
+        className="group absolute -bottom-3 -right-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-white transition-transform duration-200 hover:scale-110 hover:opacity-90"
       >
         <ArrowIconButton />
       </Link>

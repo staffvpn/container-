@@ -17,7 +17,7 @@ export function SiteHeader() {
 
   return (
     <header className="hidden items-center justify-between px-8 py-5 md:flex">
-      <Link href="/" className="flex h-14 items-center">
+      <Link href="/" className="flex h-14 items-center transition-transform duration-200 hover:scale-105">
         <Image src="/images/logo1.png" alt="Грядка" width={220} height={67} className="h-10 w-auto" priority />
       </Link>
 
@@ -29,8 +29,8 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex h-11 items-center rounded-full px-5 transition-colors ${
-                active ? "bg-[var(--color-accent)] text-white" : "hover:text-[var(--color-ink)]"
+              className={`flex h-11 items-center rounded-full px-5 transition-all duration-200 ${
+                active ? "bg-[var(--color-accent)] text-white" : "hover:bg-[var(--color-panel)] hover:text-[var(--color-ink)]"
               }`}
             >
               {item.label}
@@ -41,7 +41,7 @@ export function SiteHeader() {
 
       <Link
         href="/profile"
-        className="flex h-14 items-center rounded-full bg-[var(--color-ink)] px-6 text-base text-white hover:opacity-90"
+        className="flex h-14 items-center rounded-full bg-[var(--color-ink)] px-6 text-base text-white transition-transform duration-200 hover:scale-105 hover:opacity-90"
       >
         Профиль
       </Link>
