@@ -12,6 +12,8 @@ import {
   rejectSuggestion,
   approveApplication,
   rejectApplication,
+  setComplaintStatus,
+  blockSupplierFromComplaint,
 } from "@/app/admin/moderation/actions";
 
 function ActionButtons({ children }: { children: React.ReactNode }) {
@@ -110,6 +112,50 @@ export function SuggestionActions({ suggestionId }: { suggestionId: string }) {
         >
           Отклонить
         </button>
+      </ActionButtons>
+    </div>
+  );
+}
+
+export function ComplaintActions({
+  complaintId,
+  supplierEntityId,
+}: {
+  complaintId: string;
+  supplierEntityId?: string;
+}) {
+  const { pending, run, error } = useModerationAction();
+  return (
+    <div className="flex flex-col gap-2">
+      {error && <p className="text-sm text-[#b3261e]">{error}</p>}
+      <ActionButtons>
+        <button disabled={pending} onClick={() => run(() => setComplaintStatus(complaintId, "in_review"))} className="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs hover:border-[var(--color-ink)]">
+          В работу
+        </button>
+        <button
+          disabled={pending}
+          onClick={() => {
+            const note = prompt("Комментарий (необязательно):") ?? "";
+            run(() => setComplaintStatus(complaintId, "resolved", note));
+          }}
+          className="rounded-full bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-white"
+        >
+          Решено
+        </button>
+        <button disabled={pending} onClick={() => run(() => setComplaintStatus(complaintId, "closed"))} className="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs hover:border-[var(--color-ink)]">
+          Закрыть
+        </button>
+        {supplierEntityId && (
+          <button
+            disabled={pending}
+            onClick={() => {
+              if (confirm("Заблокировать поставщика на основании этой жалобы?")) run(() => blockSupplierFromComplaint(complaintId, supplierEntityId));
+            }}
+            className="rounded-full border border-[#b3261e] px-3 py-1 text-xs text-[#b3261e] hover:bg-[#b3261e] hover:text-white"
+          >
+            Заблокировать поставщика
+          </button>
+        )}
       </ActionButtons>
     </div>
   );

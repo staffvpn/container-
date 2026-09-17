@@ -5,6 +5,7 @@ import {
   ErrorReportActions,
   SuggestionActions,
   ApplicationActions,
+  ComplaintActions,
 } from "@/components/admin/moderation-actions";
 
 const issueTypeLabels: Record<string, string> = {
@@ -14,6 +15,22 @@ const issueTypeLabels: Record<string, string> = {
   wrong_address: "Неверный адрес",
   wrong_category: "Неправильная категория",
   other: "Другое",
+};
+
+const complaintReasonLabels: Record<string, string> = {
+  fraud: "Мошенничество",
+  not_exists: "Компания не существует",
+  wrong_info: "Неверная информация",
+  spam: "Спам",
+  rules_violation: "Нарушение правил",
+  other: "Другое",
+};
+
+const complaintStatusLabels: Record<string, string> = {
+  new: "Новая",
+  in_review: "В работе",
+  resolved: "Решена",
+  closed: "Закрыта",
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -27,6 +44,7 @@ const tabs = [
   { key: "suggestions", label: "Добавить поставщика" },
   { key: "reviews", label: "Отзывы" },
   { key: "errors", label: "Сообщения об ошибках" },
+  { key: "complaints", label: "Жалобы" },
 ] as const;
 
 export default async function ModerationPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -54,11 +72,26 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
     supabase.from("error_reports").select("id, issue_type, comment, status, created_at, profiles!user_id(display_name, telegram_username), suppliers!inner(name, slug)").order("created_at", { ascending: false }).limit(100),
   ]);
 
+  const { data: newComplaints } = await supabase.from("complaints").select("id").eq("status", "new");
+  const { data: allComplaints } = await supabase
+    .from("complaints")
+    .select("id, entity_type, entity_id, reason, description, status, admin_note, created_at, profiles!user_id(display_name, telegram_username)")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  const supplierComplaintIds = (allComplaints ?? []).filter((c) => c.entity_type === "supplier").map((c) => c.entity_id);
+  const { data: complaintSuppliers } =
+    supplierComplaintIds.length > 0
+      ? await supabase.from("suppliers").select("id, name, slug").in("id", supplierComplaintIds)
+      : { data: [] };
+  const supplierById = new Map((complaintSuppliers ?? []).map((s) => [s.id, s]));
+
   const counts = {
     applications: pendingApplications?.length ?? 0,
     suggestions: pendingSuggestions?.length ?? 0,
     reviews: pendingReviews?.length ?? 0,
     errors: openReports?.length ?? 0,
+    complaints: newComplaints?.length ?? 0,
   };
 
   return (
@@ -174,6 +207,33 @@ export default async function ModerationPage({ searchParams }: { searchParams: P
             </div>
           ))}
           {(allReports ?? []).length === 0 && <p className="p-6 text-center text-sm text-[var(--color-ink-soft)]">Сообщений нет.</p>}
+        </div>
+      )}
+
+      {tab === "complaints" && (
+        <div className="flex flex-col gap-3">
+          {(allComplaints ?? []).map((c) => {
+            const supplier = c.entity_type === "supplier" ? supplierById.get(c.entity_id) : undefined;
+            return (
+              <div key={c.id} className="rounded-[var(--radius-md)] border border-[var(--color-line)] p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="font-medium">
+                    {supplier ? supplier.name : `${c.entity_type} ${c.entity_id.slice(0, 8)}`} — {complaintReasonLabels[c.reason] ?? c.reason}
+                  </p>
+                  <span className="rounded-full bg-[var(--color-panel)] px-2.5 py-1 text-xs">{complaintStatusLabels[c.status] ?? c.status}</span>
+                </div>
+                {c.description && <p className="mt-1 text-sm">{c.description}</p>}
+                {c.admin_note && <p className="mt-1 text-sm text-[var(--color-ink-soft)]">Заметка: {c.admin_note}</p>}
+                <p className="mt-1 text-xs text-[var(--color-ink-soft)]">
+                  {c.profiles?.display_name || c.profiles?.telegram_username || "Пользователь"} · {new Date(c.created_at).toLocaleDateString("ru-RU")}
+                </p>
+                <div className="mt-3">
+                  <ComplaintActions complaintId={c.id} supplierEntityId={supplier?.id} />
+                </div>
+              </div>
+            );
+          })}
+          {(allComplaints ?? []).length === 0 && <p className="p-6 text-center text-sm text-[var(--color-ink-soft)]">Жалоб нет.</p>}
         </div>
       )}
     </div>

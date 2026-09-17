@@ -9,6 +9,7 @@ import { ReviewForm } from "@/components/review-form";
 import { ErrorReportButton } from "@/components/error-report-button";
 import { TrackedLink } from "@/components/tracked-link";
 import { ClaimOwnershipSection } from "@/components/claim-ownership-section";
+import { ComplaintButton } from "@/components/complaint-button";
 
 const statusLabel: Record<string, string | null> = {
   unverified: null,
@@ -112,6 +113,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ slug:
         <div className="flex items-center gap-4">
           <ErrorReportButton supplierSlug={supplier.slug} />
           <ClaimOwnershipSection supplierSlug={supplier.slug} />
+          <ComplaintButton entityType="supplier" entityId={supplier.id} />
         </div>
       </section>
 

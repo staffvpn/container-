@@ -209,6 +209,39 @@ export async function approveApplication(applicationId: string) {
   revalidateModeration();
 }
 
+// --- Complaints ("Жалобы") ---
+
+export async function setComplaintStatus(complaintId: string, status: string, note?: string) {
+  const { supabase, userId } = await requireAdmin();
+  const { error } = await supabase
+    .from("complaints")
+    .update({ status, admin_note: note || null, updated_at: new Date().toISOString() })
+    .eq("id", complaintId);
+  if (error) throw new Error(error.message);
+  await logAudit(supabase, userId, "complaint", complaintId, "complaint_status_changed", null, { status, note });
+  revalidateModeration();
+}
+
+export async function blockSupplierFromComplaint(complaintId: string, supplierId: string) {
+  const { supabase, userId } = await requireAdmin();
+  const { error: supplierError } = await supabase
+    .from("suppliers")
+    .update({ status: "blocked", updated_at: new Date().toISOString() })
+    .eq("id", supplierId);
+  if (supplierError) throw new Error(supplierError.message);
+
+  const { error } = await supabase
+    .from("complaints")
+    .update({ status: "resolved", updated_at: new Date().toISOString() })
+    .eq("id", complaintId);
+  if (error) throw new Error(error.message);
+
+  await logAudit(supabase, userId, "supplier", supplierId, "status_changed", null, { status: "blocked", source: "complaint" });
+  await logAudit(supabase, userId, "complaint", complaintId, "complaint_resolved_by_block", null, { supplier_id: supplierId });
+  revalidateModeration();
+  revalidatePath("/admin/suppliers");
+}
+
 export async function rejectApplication(applicationId: string, note?: string) {
   const { supabase, userId } = await requireAdmin();
   const { error } = await supabase
